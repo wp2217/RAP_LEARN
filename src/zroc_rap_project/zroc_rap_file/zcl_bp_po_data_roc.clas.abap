@@ -1,0 +1,5 @@
+CLASS zcl_bp_po_data_roc DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_file_data_roc.
+ENDCLASS.
+
+CLASS zcl_bp_po_data_roc IMPLEMENTATION.
+ENDCLASS.

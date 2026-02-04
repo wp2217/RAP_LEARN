@@ -1,0 +1,5 @@
+CLASS zbp_sm30_singleton_roc DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_sm30_singleton.
+ENDCLASS.
+
+CLASS zbp_sm30_singleton_roc IMPLEMENTATION.
+ENDCLASS.

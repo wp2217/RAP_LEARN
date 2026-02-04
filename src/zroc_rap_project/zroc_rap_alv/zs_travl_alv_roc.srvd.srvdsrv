@@ -1,0 +1,4 @@
+@EndUserText.label: 'Service for TRAVL_ALV_ROC'
+define service ZS_TRAVL_ALV_ROC {
+  expose ZI_TRAVL_ALV_ROC;
+}

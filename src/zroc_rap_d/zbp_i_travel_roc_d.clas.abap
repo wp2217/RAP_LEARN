@@ -1,0 +1,7 @@
+CLASS zbp_i_travel_roc_d DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_travel_roc_d.
+ENDCLASS.
+
+
+
+CLASS zbp_i_travel_roc_d IMPLEMENTATION.
+ENDCLASS.

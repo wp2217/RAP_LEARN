@@ -1,0 +1,5 @@
+@EndUserText.label: 'SM30 DATA Maintain Test'
+define service ZS_SM30_DATA_ROC {
+  expose ZC_SM30_SINGLETON;
+  expose ZC_SM30_ROC;
+}

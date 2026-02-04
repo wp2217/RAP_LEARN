@@ -1,0 +1,146 @@
+managed;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_TRAVEL_ROC_D //alias <alias_name>
+implementation in class zbp_i_travel_roc_d unique
+persistent table /dmo/a_travel_d
+draft table zdr_roc_travel_d  //名字不能太长，太长不能创建
+lock master
+total etag LastChangedAt   //for Draft Object optimistic concurrency control
+authorization master ( global, instance )
+etag master LocalLastChangedAt //for Active Object optimistic concurrency control
+{
+  create ( precheck );   //Incomes Value数据(即页面修改的数据)权限检查
+  update ( precheck );   //Incomes Value数据(即页面修改的数据)权限检查
+  delete;
+  field ( numbering : managed, readonly ) TravelUUID;
+  field ( readonly ) TravelID, TotalPrice, OverallStatus;
+
+  association _Booking { create ( authorization : update ); with draft; } // 创建booking时调用instance update的权限检查
+
+  action ( authorization : update ) acceptTravel result [1] $self;
+  action ( authorization : update ) rejectTravel result [1] $self;
+  action ( authorization : update ) deductDiscount parameter ZA_DEDUCT_DISCOUNT_ROC_D result [1] $self;
+
+  internal action recalcTotPrice; // 相当于类的私有方法, 供determination方法里可以直接调用
+
+  determination setTravelID on save { create; } //仅单据创建的时候会触发
+  determination setStatusOpen on modify { create; } //仅单据创建的时候会触发
+  determination calcTotalPrice on modify { create; field BookingFee, CurrencyCode; }//单据创建及字段更新时都会触发
+
+  side effects { field BookingFee affects field TotalPrice; }
+
+  field ( mandatory ) CustomerID;
+  validation validateCustomer on save { create; field CustomerID; }
+
+  //----------------------------------------------------->Draft
+  // with additional implementation; 可以加一些自定义逻辑
+  draft action Resume with additional implementation;
+  draft action Edit with additional implementation;
+  draft action Discard with additional implementation;
+  draft action Activate optimized with additional implementation;
+
+  draft determine action Prepare
+  {
+    validation validateCustomer;
+    validation ZI_BOOKING_ROC_D~validateCustomer;
+    validation ZI_BOOKSUPPL_ROC_D~validateSupplement;
+  }
+  //-----------------------------------------------------<Draft
+  mapping for /dmo/a_travel_d
+    {
+      TravelUUID         = travel_uuid;
+      TravelID           = travel_id;
+      AgencyID           = agency_id;
+      CustomerID         = customer_id;
+      BeginDate          = begin_date;
+      EndDate            = end_date;
+      BookingFee         = booking_fee;
+      TotalPrice         = total_price;
+      CurrencyCode       = currency_code;
+      Description        = description;
+      OverallStatus      = overall_status;
+      LocalCreatedBy     = local_created_by;
+      LocalCreatedAt     = local_created_at;
+      LocalLastChangedBy = local_last_changed_by;
+      LocalLastChangedAt = local_last_changed_at;
+      LastChangedAt      = last_changed_at;
+    }
+}
+
+define behavior for ZI_BOOKING_ROC_D //alias <alias_name>
+implementation in class zbp_i_booking_roc_d unique
+persistent table /dmo/a_booking_d
+draft table zdr_roc_book_d
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  field ( numbering : managed, readonly ) BookingUUID;
+  field ( readonly ) TravelUUID, BookingID;
+  association _Travel { with draft; }
+  association _BookSuppl { create ( authorization : update ); with draft; }// 创建booksuppl时调用instance update的权限检查
+
+  determination setBookinglID on save { create; }
+  determination calcTotalPrice on modify { create; field FlightPrice, CurrencyCode; }//单据创建及字段更新时都会触发
+
+  side effects { field FlightPrice affects field _Travel.TotalPrice; }
+
+  field ( mandatory ) CustomerID;
+  validation validateCustomer on save { create; field CustomerID; }
+
+  mapping for /dmo/a_booking_d
+    {
+      BookingUUID        = booking_uuid;
+      TravelUUID         = parent_uuid;
+      BookingID          = booking_id;
+      BookingDate        = booking_date;
+      CustomerID         = customer_id;
+      CarrierID          = carrier_id;
+      ConnectionID       = connection_id;
+      FlightDate         = flight_date;
+      FlightPrice        = flight_price;
+      CurrencyCode       = currency_code;
+      BookingStatus      = booking_status;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+}
+
+define behavior for ZI_BOOKSUPPL_ROC_D //alias <alias_name>
+implementation in class zbp_i_booksuppl_roc_d unique
+persistent table /dmo/a_bksuppl_d
+draft table zdr_roc_bksupl_d
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  field ( numbering : managed, readonly ) BooksupplUUID;
+  field ( readonly ) TravelUUID, BookingUUID, BookingSupplementID;
+  association _Travel { with draft; }
+  association _Booking { with draft; }
+
+  determination setBookSupplID on save { create; }
+  determination calcTotalPrice on modify { create; field Price, CurrencyCode; }//单据创建及字段更新时都会触发
+
+  side effects { field Price affects field _Travel.TotalPrice; }
+
+  field ( mandatory ) SupplementID;
+  validation validateSupplement on save { create; field SupplementID; }
+
+  mapping for /dmo/a_bksuppl_d
+    {
+      BooksupplUUID       = booksuppl_uuid;
+      TravelUUID          = root_uuid;
+      BookingUUID         = parent_uuid;
+      BookingSupplementID = booking_supplement_id;
+      SupplementID        = supplement_id;
+      Price               = price;
+      CurrencyCode        = currency_code;
+      LocalLastChangedAt  = local_last_changed_at;
+    }
+}

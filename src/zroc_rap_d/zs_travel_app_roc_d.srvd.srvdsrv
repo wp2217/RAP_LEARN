@@ -1,0 +1,6 @@
+@EndUserText.label: 'Service for Travel App with Draft'
+define service ZS_TRAVEL_APP_ROC_D {
+  expose ZC_TRAVEL_ROC_D    as Travel;
+  expose ZC_BOOKING_ROC_D   as Booking;
+  expose ZC_BOOKSUPPL_ROC_D as BookSuppl;
+}

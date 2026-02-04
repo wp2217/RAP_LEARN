@@ -1,0 +1,84 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'User File',
+  typeNamePlural: 'User Files',
+  title: {
+    type: #STANDARD,
+    value: 'FileId'
+  }
+}
+annotate entity ZC_FILE_DATA_ROC with
+{
+  @UI.facet: [
+             {  id: 'idEndUser',
+              purpose: #HEADER,
+              type: #DATAPOINT_REFERENCE,
+              targetQualifier: 'tqEndUser',
+              position: 10,
+              label: 'End User'  },
+
+             {  id: 'idChgAt',
+              purpose: #HEADER,
+              type: #DATAPOINT_REFERENCE,
+              targetQualifier: 'tqChgAt',
+              position: 20,
+              label: 'Change At'  },
+
+             {  id: 'idStatus',
+              purpose: #HEADER,
+              type: #DATAPOINT_REFERENCE,
+              targetQualifier: 'tqStatus',
+              position: 30,
+              label: 'Status'  },
+
+             {  id: 'idFileData',
+              purpose: #STANDARD,
+              type: #IDENTIFICATION_REFERENCE,
+              position: 40,
+              label: 'File Upload'  },
+
+              { id: 'idPOData',
+              purpose: #STANDARD,
+              type: #LINEITEM_REFERENCE,
+              position: 50,
+              label: 'PO Data',
+              targetElement: '_po_data'  }
+              ]
+
+
+  @UI.lineItem: [{  position: 10}]
+  @UI.identification: [{ type: #FOR_ACTION, label: 'Upload Data', dataAction: 'uploadExcelData'  }]
+  @UI.dataPoint: {qualifier: 'tqEndUser',title: 'End User'}
+  EndUser;
+
+  @UI.lineItem: [{  position: 20, label: 'File ID'}]
+  //  @UI.identification: [{  position: 20 }]
+  FileId;
+
+  @UI.lineItem: [{  position: 30}]
+  @UI.identification: [{  position: 30 }]
+  @UI.dataPoint: {qualifier: 'tqStatus',title: 'Status'}
+  Status;
+
+  // @UI.lineItem: [{  position: 40}]
+  @UI.identification: [{  position: 40, label: 'Select Excel File to Upload' }]
+  Attachment;
+
+  @UI.hidden: true
+  Mimetype;
+  @UI.lineItem: [{  position: 50, label: 'File Name'}]
+  Filename;
+  @UI.hidden: true
+  LocalCreatedBy;
+  @UI.hidden: true
+  LocalCreatedAt;
+  @UI.hidden: true
+  LocalLastChangedBy;
+  @UI.dataPoint: {qualifier: 'tqChgAt',title: 'Last Change At'}
+  LocalLastChangedAt;
+  @UI.hidden: true
+  LastChangedAt;
+  /* Associations */
+  //_po_data;
+
+}

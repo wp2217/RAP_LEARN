@@ -1,0 +1,88 @@
+managed;      // This APP only support odata v4 and odata v4 must with draft
+strict ( 2 );
+with draft;
+
+define behavior for ZI_FILE_DATA_ROC //alias <alias_name>
+implementation in class zcl_bp_file_data_roc unique
+persistent table zroc_file_data
+draft table zrocd_file_data
+lock master
+total etag LastChangedAt   //for Draft Object optimistic concurrency control
+authorization master ( instance )
+etag master LocalLastChangedAt
+early numbering
+{
+  create ( authorization : global );
+  update;
+  delete;
+  field ( readonly ) EndUser, FileId, Status;
+
+  action( features : instance ) uploadExcelData result [1] $self;
+
+  determination fillFileStatus on modify { create; field EndUser;  } //仅单据创建的时候会触发
+  determination fillSelectedStatus on modify { field Attachment; }
+
+  side effects
+  {
+    field Attachment affects field Status;
+    action uploadExcelData affects $self, messages;
+  }
+
+  //----------------------------------------------------->Draft
+  draft action Resume;
+  draft action Edit;
+  draft action Discard;
+  draft action Activate optimized;
+  draft determine action Prepare;
+  //-----------------------------------------------------<Draft
+
+  mapping for zroc_file_data
+    {
+      EndUser            = end_user;
+      FileId             = file_id;
+      Status             = status;
+      Attachment         = attachment;
+      Mimetype           = mimetype;
+      Filename           = filename;
+      LastChangedAt      = last_changed_at;
+      LocalCreatedAt     = local_created_at;
+      LocalCreatedBy     = local_created_by;
+      LocalLastChangedAt = local_last_changed_at;
+      LocalLastChangedBy = local_last_changed_by;
+    }
+
+  association _po_data { create; with draft; }
+}
+
+define behavior for ZI_PO_DATA_ROC //alias <alias_name>
+implementation in class zcl_bp_po_data_roc unique
+persistent table zroc_po_data
+draft table zrocd_po_data
+lock dependent by _file_data
+authorization dependent by _file_data
+//etag master <field_name>
+{
+  update;
+  delete;
+  field ( readonly ) EndUser, FileId, LineNum,
+  Ebeln, Ebelp, Quantity, BaseUom, Error, ErrorMessage;
+  field ( readonly, numbering : managed ) LineId;
+
+  action processData result [1] $self;
+
+  mapping for zroc_po_data
+    {
+      EndUser      = end_user;
+      FileId       = file_id;
+      LineId       = line_id;
+      LineNum      = line_no;
+      Ebeln        = ebeln;
+      Ebelp        = ebelp;
+      Quantity     = quantity;
+      BaseUom      = base_uom;
+      Error        = error;
+      ErrorMessage = error_message;
+    }
+
+  association _file_data { with draft; }
+}

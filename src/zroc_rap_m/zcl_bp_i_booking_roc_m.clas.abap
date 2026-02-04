@@ -1,0 +1,7 @@
+CLASS zcl_bp_i_booking_roc_m DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_travel_roc_m.
+ENDCLASS.
+
+
+
+CLASS zcl_bp_i_booking_roc_m IMPLEMENTATION.
+ENDCLASS.

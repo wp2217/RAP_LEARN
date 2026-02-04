@@ -1,0 +1,30 @@
+projection;
+strict ( 2 );
+use draft;
+use side effects;
+
+define behavior for ZC_FILE_DATA_ROC //alias <alias_name>
+{
+  use create;
+  use update;
+  use delete;
+
+  use association _po_data {create; with draft; }
+
+  use action uploadExcelData;
+
+    // for Draft
+  use action Edit;
+  use action Activate;
+  use action Resume;
+  use action Discard;
+  use action Prepare;
+}
+
+define behavior for ZC_PO_DATA_ROC //alias <alias_name>
+{
+  use update;
+  use delete;
+
+  use association _file_data { with draft;}
+}

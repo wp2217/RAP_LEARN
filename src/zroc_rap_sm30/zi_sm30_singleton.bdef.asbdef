@@ -1,0 +1,52 @@
+managed implementation in class zbp_sm30_singleton_roc unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_SM30_SINGLETON //alias <alias_name>
+with unmanaged save
+draft table zdt_sm30_siglton
+lock master
+total etag maxChangeAt
+authorization master ( instance )
+//etag master <field_name>
+{
+  //  create ( authorization : global );
+  //  update;
+  //  delete;
+  field ( readonly ) SM30SingletonField;
+  association _SM30_DATA { create; with draft; }
+
+  //----------------------------------------------------->Draft
+  draft action Resume;
+  draft action Edit;
+  draft action Discard;
+  draft action Activate optimized;
+
+  draft determine action Prepare;
+}
+
+define behavior for ZI_SM30_ROC //alias <alias_name>
+persistent table ztb_sm30_roc
+draft table zdt_sm30_roc
+lock dependent by _SM30_SINGLETON
+authorization dependent by _SM30_SINGLETON
+etag master Locallastchangedat
+{
+  update;
+  delete;
+
+  field ( readonly : update ) PARAM;
+  field ( readonly ) SM30SingletonField, Lastchangedat, Locallastchangedat;
+
+  association _SM30_SINGLETON { with draft; }
+
+  mapping for ztb_sm30_roc
+    {
+      Param              = param;
+      Description        = description;
+      Value              = value;
+      Active             = active;
+      Locallastchangedat = locallastchangedat;
+      Lastchangedat      = lastchangedat;
+    }
+}

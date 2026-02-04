@@ -1,0 +1,27 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for ZC_SM30_SINGLETON //alias <alias_name>
+{
+//  use create;
+//  use update;
+//  use delete;
+  use association _SM30_DATA { create; with draft; }
+
+    // for Draft
+  use action Edit;
+  use action Activate;
+  use action Resume;
+  use action Discard;
+  use action Prepare;
+}
+
+define behavior for ZC_SM30_ROC //alias <alias_name>
+use etag
+{
+  use update;
+  use delete;
+
+  use association _SM30_SINGLETON{ with draft; }
+}

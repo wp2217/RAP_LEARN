@@ -1,0 +1,60 @@
+unmanaged implementation in class zcl_bp_i_travel_roc_u unique;
+strict ( 2 );
+
+define behavior for ZI_TRAVEL_ROC_U alias Travel
+implementation in class zcl_bp_i_travel_roc_u unique
+late numbering
+lock master
+authorization master ( global )
+etag master LastChangedAt
+{
+  create ( authorization : global );
+  update;
+  delete;
+  field ( readonly ) TravelId, LastChangedAt;
+  field ( mandatory ) AgencyId, CustomerId, BeginDate, EndDate;
+  association _Booking { create ( features : instance ); }
+
+  mapping for /dmo/travel control /dmo/s_travel_intx //当字段有值时，control 结构也会自动填充
+    {
+      TravelId      = travel_id;
+      AgencyId      = agency_id;
+      BeginDate     = begin_date;
+      EndDate       = end_date;
+      BookingFee    = booking_fee;
+      CurrencyCode  = currency_code;
+      CustomerId    = customer_id;
+      LastChangedAt = lastchangedat;
+      Description   = description;
+      OverallStatus = status;
+      TotalPrice    = total_price;
+    }
+}
+
+define behavior for ZI_BOOKING_ROC_U alias Booking
+implementation in class zcl_bp_i_booking_roc_u unique
+late numbering
+lock dependent by _Travel
+authorization dependent by _Travel
+etag dependent by _Travel
+{
+  update;
+  delete;
+  field ( readonly ) TravelId, BookingId;
+  field ( mandatory ) BookingDate, CustomerId, CarrierId, ConnectionId, FlightDate;
+  association _Travel;
+
+  mapping for /dmo/booking control /dmo/s_booking_intx
+    {
+      TravelId     = travel_id;
+      BookingId    = booking_id;
+      BookingDate  = booking_date;
+      CarrierId    = carrier_id;
+      ConnectionId = connection_id;
+      CurrencyCode = currency_code;
+      CustomerId   = customer_id;
+      FlightDate   = flight_date;
+      FlightPrice  = flight_price;
+    }
+
+}

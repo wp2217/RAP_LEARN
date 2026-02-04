@@ -1,0 +1,53 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'File Data',
+  typeNamePlural: 'File PO Data',
+  title: {
+    type: #STANDARD,
+    value: 'EndUser'
+  },
+  description: {
+    type: #STANDARD,
+    value: 'FileId'
+  }
+
+}
+annotate entity ZC_PO_DATA_ROC with
+{
+  @UI.hidden: true
+  EndUser;
+
+  @UI.hidden: true
+  @UI.lineItem: [{  position: 10}]
+  FileId;
+
+  @UI.hidden: true
+  @UI.lineItem: [{  position: 20, label: 'Line ID'}]
+  LineId;
+
+  @UI.lineItem: [{  position: 30}]
+  LineNum;
+
+  @UI.lineItem: [{  position: 40}]
+  Ebeln;
+
+  @UI.lineItem: [{  position: 50}]
+  Ebelp;
+
+  @UI.lineItem: [{  position: 60}]
+  Quantity;
+
+  @UI.lineItem: [{  position: 70}]
+  BaseUom;
+
+
+  @UI.lineItem: [{  position: 80, label: 'Message Type'}]
+  Error;
+
+  @UI.lineItem: [{  position: 90, label: 'Message'}]
+  ErrorMessage;
+
+  /* Associations */
+  // _file_data;
+
+}

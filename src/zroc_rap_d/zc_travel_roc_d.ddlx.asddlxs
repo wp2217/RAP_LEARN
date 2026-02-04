@@ -1,0 +1,201 @@
+@Metadata.layer: #CORE
+@Search.searchable: true
+@UI.headerInfo: {
+    typeName: 'Travel App with Draft',
+    typeNamePlural: 'Travels',
+    typeImageUrl: 'sap-icon://flight',
+
+    title: {
+      type: #STANDARD,
+      value: 'TravelID'
+    },
+
+    description: {
+      type: #STANDARD,
+      value: 'Description'
+    }
+}
+
+//Start--> 如下设置需要在fiori 前端manifest.json做对应设置才能生效
+
+//UI快速过滤按钮
+@UI.selectionVariant: [
+{ qualifier: 'StatusAll',    text: 'All' },
+{ qualifier: 'StatusOpen',   text: 'Open',   filter: 'OverallStatus EQ "O"' },
+{ qualifier: 'StatusAccept', text: 'Accept', filter: 'OverallStatus EQ "A"' } ]
+
+@UI.presentationVariant: [{
+    qualifier: 'PV_All',
+    text: 'All',
+    maxItems: 10,
+    sortOrder: [{
+      by: 'TravelID',
+      direction: #DESC
+    }],
+    groupBy: [ 'AgencyID' ],  //字段在UI上放出来，才能按此字段分组
+  //  totalBy: [ '' ],
+  //  total: [ '' ],
+  //  includeGrandTotal: true,
+  //  initialExpansionLevel: ,
+  //  recursiveHierarchyQualifier: '',
+    requestAtLeast: [ 'TravelUUID', 'TravelID' , 'OverallStatus'],
+    visualizations: [{
+      type: #AS_LINEITEM
+  //    qualifier: '',
+  //    element: ''
+    }],
+    selectionFieldsQualifier: 'StatusAll'
+  },
+
+  {
+    qualifier: 'PV_Accept',
+    text: 'Accept',
+    maxItems: 15,
+    sortOrder: [{
+      by: 'TravelID',
+      direction: #DESC
+    }],
+    groupBy: [ 'CustomerID' ],
+    requestAtLeast: [ 'TravelUUID', 'TravelID' , 'OverallStatus'],
+    visualizations: [{
+      type: #AS_LINEITEM,
+      qualifier: 'Accept'
+    }],
+    selectionFieldsQualifier: 'StatusAccept'
+    }
+]
+
+@UI.selectionPresentationVariant: [{
+    qualifier: 'SPV_All',
+    text: 'ALL',
+    selectionVariantQualifier: 'StatusAll',
+    presentationVariantQualifier: 'PV_All'
+  },
+
+  {
+    qualifier: 'SPV_Accept',
+    text: 'Accept',
+    selectionVariantQualifier: 'StatusAccept',
+    presentationVariantQualifier: 'PV_Accept'
+  }
+]
+//End --<
+
+annotate view ZC_TRAVEL_ROC_D with
+{
+  @UI.facet: [
+             {  id: 'idDPStatus',
+              purpose: #HEADER,
+              type: #DATAPOINT_REFERENCE,  //按字段按顺序，显示在head区域
+              targetQualifier: 'tqStatus',
+              position: 10,
+              label: 'Overall Status'  },
+              
+             {  id: 'idDPBeginDate',
+              purpose: #HEADER,
+              type: #DATAPOINT_REFERENCE,
+              targetQualifier: 'tqBeginDate',
+              position: 20,
+              label: 'Begin Date'  },
+
+             {  id: 'idDPEndDate',
+              purpose: #HEADER,
+              type: #DATAPOINT_REFERENCE,
+              targetQualifier: 'tqEndDate',
+              position: 30,
+              label: 'End Date'  },
+              
+//如下{ lineItem: [{  position: 20 }],定义在当前页面，显示在当前页面
+
+             {  id: 'Travel',
+              purpose: #STANDARD,
+              type: #IDENTIFICATION_REFERENCE,//显示具体Object，结合当前节点metadata中UI.identification: [{  position: 30 }]显示字段（定义在当前页面，显示在下一个页面）
+              position: 30,
+              label: 'Travel Detail'  },   //Tab页签
+
+              { id: 'Booking',
+              purpose: #STANDARD,
+              type: #LINEITEM_REFERENCE,   //子节点按行项目显示， 结合子节点metadata中@UI.lineItem: [{  position: 80}]显示字段（定义在下个页面，显示在下一个页面）
+              position: 40,
+              label: 'Bookings',          //Tab页签       
+              targetElement: '_Booking'  }
+              ]
+
+
+
+  @UI.lineItem: [{  position: 10, qualifier: 'Accept' }, { type: #FOR_ACTION, dataAction: 'deductDiscount', label: 'Discount' },
+  { type: #FOR_ACTION, dataAction: 'acceptTravel', label: 'Accept Travel' }, { type: #FOR_ACTION, dataAction: 'rejectTravel', label: 'Reject Travel' } ]
+
+  @UI.identification: [{  position: 10 }, { type: #FOR_ACTION, dataAction: 'deductDiscount', label: 'Discount' },
+  { type: #FOR_ACTION, dataAction: 'acceptTravel', label: 'Accept Travel' }, { type: #FOR_ACTION, dataAction: 'rejectTravel', label: 'Reject Travel' } ]
+  @Search.defaultSearchElement: true
+  TravelID;
+
+  @UI: { lineItem: [{  position: 20 }],
+         selectionField: [{ position: 20 }],
+         identification: [{  position: 30 }]
+       }
+  @Search.defaultSearchElement: true
+  @Consumption.valueHelpDefinition: [{
+      entity: {
+      name: '/DMO/I_Agency',
+      element: 'AgencyID'
+  }, useForValidation: true }]
+  AgencyID;
+
+  @UI.selectionField: [{ position: 30 }]
+  @UI.identification: [{  position: 30 }]
+  @Search.defaultSearchElement: true
+  @Consumption.valueHelpDefinition: [{
+      entity: {
+      name: '/DMO/I_Customer',
+      element: 'CustomerID'
+  } }]
+  @UI.lineItem: [{  position: 30}]
+  CustomerID;
+
+  @UI.lineItem: [{  position: 40 }]
+  @UI.identification: [{  position: 40 }]
+  @UI.dataPoint: {qualifier: 'tqBeginDate',title: 'Begin Date'}
+  BeginDate;
+
+  @UI.lineItem: [{  position: 50 }]
+  @UI.identification: [{  position: 50 }]
+  @UI.dataPoint: {qualifier: 'tqEndDate',title: 'End Date'}
+  EndDate;
+
+  //@UI.lineItem: [{  position: 60}]
+  @UI.identification: [{  position: 60 }]
+  BookingFee;
+
+  @UI.lineItem: [{  position: 70 }]
+  @UI.identification: [{  position: 70 }]
+  TotalPrice;
+
+  @UI.lineItem: [{  position: 80}]
+  @Consumption.valueHelpDefinition: [{
+      entity: {
+      name: 'I_Currency',
+      element: 'Currency'
+  }, useForValidation: true }]
+  CurrencyCode;
+
+  //@UI.lineItem: [{  position: 90}]
+
+  @UI.identification: [{  position: 90 }]
+  Description;
+
+  @UI.lineItem: [{  position: 100}]
+  @UI.selectionField: [{ position: 100 }]
+  @UI.identification: [{  position: 100 }]
+  @UI.textArrangement: #TEXT_ONLY
+  @Search.defaultSearchElement: true
+  @Consumption.valueHelpDefinition: [{
+      entity: {
+      name: '/DMO/I_Overall_Status_VH',
+      element: 'OverallStatus'
+  }}]
+  @UI.dataPoint: {qualifier: 'tqStatus',title: 'Overall Status'}
+  OverallStatus;
+
+}

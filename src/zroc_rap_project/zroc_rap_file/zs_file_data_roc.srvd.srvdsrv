@@ -1,0 +1,5 @@
+@EndUserText.label: 'Service for FIle Data'
+define service ZS_FILE_DATA_ROC {
+  expose ZC_FILE_DATA_ROC;
+  expose ZC_PO_DATA_ROC;
+}
