@@ -13,7 +13,7 @@ define root view entity ZI_TRAVEL_ROC_D
   key travel_uuid           as TravelUUID,
       travel_id             as TravelID,
       agency_id             as AgencyID,
-      customer_id           as CustomerID,
+      customer_id           as CustomerID, 
       begin_date            as BeginDate,
       end_date              as EndDate,
       @Semantics.amount.currencyCode: 'CurrencyCode'
@@ -23,7 +23,14 @@ define root view entity ZI_TRAVEL_ROC_D
       currency_code         as CurrencyCode,
       description           as Description,
       overall_status        as OverallStatus,
-      
+
+      case overall_status
+      when 'A' then 3
+      when 'O' then 2
+      when 'X' then 1
+      else 0
+      end                   as OverallStatusCritical,
+
       @Semantics.user.createdBy: true
       local_created_by      as LocalCreatedBy,
       @Semantics.user.localInstanceLastChangedBy: true
@@ -31,10 +38,10 @@ define root view entity ZI_TRAVEL_ROC_D
 
       @Semantics.systemDateTime.createdAt: true
       local_created_at      as LocalCreatedAt,
-      @Semantics.systemDateTime.localInstanceLastChangedAt: true 
-      local_last_changed_at as LocalLastChangedAt,   //for Etag
+      @Semantics.systemDateTime.localInstanceLastChangedAt: true
+      local_last_changed_at as LocalLastChangedAt, //for Etag
       @Semantics.systemDateTime.lastChangedAt: true
-      last_changed_at       as LastChangedAt,  //for total Etag
+      last_changed_at       as LastChangedAt, //for total Etag
 
       //Compoment
       _Booking,

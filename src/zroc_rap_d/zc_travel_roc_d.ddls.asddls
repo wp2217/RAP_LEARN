@@ -29,6 +29,8 @@ define root view entity ZC_TRAVEL_ROC_D
       @ObjectModel.text.element: [ 'OverallStatusText' ]
       OverallStatus,
       _Status._Text.Text as OverallStatusText : localized, //系统登录语言
+      
+      OverallStatusCritical,
 
       LocalCreatedBy,
       LocalCreatedAt,

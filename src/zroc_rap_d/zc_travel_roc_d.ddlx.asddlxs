@@ -58,8 +58,8 @@
     groupBy: [ 'CustomerID' ],
     requestAtLeast: [ 'TravelUUID', 'TravelID' , 'OverallStatus'],
     visualizations: [{
-      type: #AS_LINEITEM,
-      qualifier: 'Accept'
+      type: #AS_LINEITEM
+     // qualifier: 'Accept'
     }],
     selectionFieldsQualifier: 'StatusAccept'
     }
@@ -81,6 +81,8 @@
 ]
 //End --<
 
+@UI.lineItem: [{criticality: 'OverallStatusCritical'}]  //整行设置不同颜色
+
 annotate view ZC_TRAVEL_ROC_D with
 {
   @UI.facet: [
@@ -90,7 +92,7 @@ annotate view ZC_TRAVEL_ROC_D with
               targetQualifier: 'tqStatus',
               position: 10,
               label: 'Overall Status'  },
-              
+
              {  id: 'idDPBeginDate',
               purpose: #HEADER,
               type: #DATAPOINT_REFERENCE,
@@ -104,26 +106,26 @@ annotate view ZC_TRAVEL_ROC_D with
               targetQualifier: 'tqEndDate',
               position: 30,
               label: 'End Date'  },
-              
-//如下{ lineItem: [{  position: 20 }],定义在当前页面，显示在当前页面
+
+  //如下{ lineItem: [{  position: 20 }],定义在当前页面，显示在当前页面
 
              {  id: 'Travel',
               purpose: #STANDARD,
               type: #IDENTIFICATION_REFERENCE,//显示具体Object，结合当前节点metadata中UI.identification: [{  position: 30 }]显示字段（定义在当前页面，显示在下一个页面）
-              position: 30,
+              position: 40,
               label: 'Travel Detail'  },   //Tab页签
 
               { id: 'Booking',
               purpose: #STANDARD,
               type: #LINEITEM_REFERENCE,   //子节点按行项目显示， 结合子节点metadata中@UI.lineItem: [{  position: 80}]显示字段（定义在下个页面，显示在下一个页面）
-              position: 40,
-              label: 'Bookings',          //Tab页签       
+              position: 50,
+              label: 'Bookings',          //Tab页签
               targetElement: '_Booking'  }
               ]
 
 
 
-  @UI.lineItem: [{  position: 10, qualifier: 'Accept' }, { type: #FOR_ACTION, dataAction: 'deductDiscount', label: 'Discount' },
+  @UI.lineItem: [{  position: 10 }, { type: #FOR_ACTION, dataAction: 'deductDiscount', label: 'Discount' },
   { type: #FOR_ACTION, dataAction: 'acceptTravel', label: 'Accept Travel' }, { type: #FOR_ACTION, dataAction: 'rejectTravel', label: 'Reject Travel' } ]
 
   @UI.identification: [{  position: 10 }, { type: #FOR_ACTION, dataAction: 'deductDiscount', label: 'Discount' },
@@ -185,9 +187,9 @@ annotate view ZC_TRAVEL_ROC_D with
   @UI.identification: [{  position: 90 }]
   Description;
 
-  @UI.lineItem: [{  position: 100}]
+  @UI.lineItem: [{  position: 100, criticality: 'OverallStatusCritical' , criticalityRepresentation: #WITHOUT_ICON }]
   @UI.selectionField: [{ position: 100 }]
-  @UI.identification: [{  position: 100 }]
+  @UI.identification: [{  position: 100, criticality: 'OverallStatusCritical' }]
   @UI.textArrangement: #TEXT_ONLY
   @Search.defaultSearchElement: true
   @Consumption.valueHelpDefinition: [{
@@ -195,7 +197,7 @@ annotate view ZC_TRAVEL_ROC_D with
       name: '/DMO/I_Overall_Status_VH',
       element: 'OverallStatus'
   }}]
-  @UI.dataPoint: {qualifier: 'tqStatus',title: 'Overall Status'}
+  @UI.dataPoint: {qualifier: 'tqStatus',title: 'Overall Status', criticality: 'OverallStatusCritical' }
   OverallStatus;
 
 }
