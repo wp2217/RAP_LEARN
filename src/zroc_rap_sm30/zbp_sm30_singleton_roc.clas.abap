@@ -1,5 +1,9 @@
 CLASS zbp_sm30_singleton_roc DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_sm30_singleton.
+protected section.
+private section.
 ENDCLASS.
 
-CLASS zbp_sm30_singleton_roc IMPLEMENTATION.
+
+
+CLASS ZBP_SM30_SINGLETON_ROC IMPLEMENTATION.
 ENDCLASS.

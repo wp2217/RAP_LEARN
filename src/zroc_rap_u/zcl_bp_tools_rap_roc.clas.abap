@@ -19,7 +19,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_bp_tools_rap_roc IMPLEMENTATION.
+CLASS ZCL_BP_TOOLS_RAP_ROC IMPLEMENTATION.
 
 
   METHOD get_cause_from_message.

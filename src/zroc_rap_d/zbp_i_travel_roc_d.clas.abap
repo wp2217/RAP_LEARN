@@ -1,7 +1,9 @@
 CLASS zbp_i_travel_roc_d DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_travel_roc_d.
+protected section.
+private section.
 ENDCLASS.
 
 
 
-CLASS zbp_i_travel_roc_d IMPLEMENTATION.
+CLASS ZBP_I_TRAVEL_ROC_D IMPLEMENTATION.
 ENDCLASS.

@@ -15,7 +15,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_test_eml_roc IMPLEMENTATION.
+CLASS ZCL_TEST_EML_ROC IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.

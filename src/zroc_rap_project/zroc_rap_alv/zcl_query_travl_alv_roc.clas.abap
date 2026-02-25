@@ -12,7 +12,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_query_travl_alv_roc IMPLEMENTATION.
+CLASS ZCL_QUERY_TRAVL_ALV_ROC IMPLEMENTATION.
 
 
   METHOD if_rap_query_provider~select.
