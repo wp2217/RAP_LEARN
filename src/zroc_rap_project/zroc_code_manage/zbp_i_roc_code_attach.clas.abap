@@ -1,0 +1,5 @@
+CLASS zbp_i_roc_code_attach DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_roc_code.
+ENDCLASS.
+
+CLASS zbp_i_roc_code_attach IMPLEMENTATION.
+ENDCLASS.

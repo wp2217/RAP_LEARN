@@ -1,0 +1,73 @@
+managed;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_ROC_CODE //alias <alias_name>
+implementation in class zbp_i_roc_code unique
+persistent table zroc_code
+draft table zroc_code_d
+lock master
+total etag Lastchangedat
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update;
+  delete;
+  field ( readonly, numbering : managed ) CodeUuid;
+
+  association _CodeAttach { create; with draft; }
+
+  //----------------------------------------------------->Draft
+  // with additional implementation; 可以加一些自定义逻辑
+  draft action Resume with additional implementation;
+  draft action Edit with additional implementation;
+  draft action Discard with additional implementation;
+  draft action Activate optimized with additional implementation;
+
+  draft determine action Prepare
+  {
+  }
+  //-----------------------------------------------------<Draft
+
+  mapping for zroc_code
+    {
+      CodeUuid           = code_uuid;
+      Title              = title;
+      Description        = description;
+      Category           = category;
+      Subcategory        = subcategory;
+      Content            = content;
+      Linkurl            = linkurl;
+      Localcreatedby     = localcreatedby;
+      Locallastchangedby = locallastchangedby;
+      Localcreatedat     = localcreatedat;
+      Locallastchangedat = locallastchangedat;
+      Lastchangedat      = lastchangedat;
+    }
+}
+
+define behavior for ZI_ROC_CODE_ATTACH //alias <alias_name>
+implementation in class zbp_i_roc_code_attach unique
+persistent table zroc_code_attach
+draft table zroc_code_att_d
+lock dependent by _Code
+authorization dependent by _Code
+//etag master <field_name>
+{
+  update;
+  delete;
+  field ( readonly ) CodeUuid;
+  field ( readonly, numbering : managed ) CodeAttachUuid;
+  association _Code { with draft; }
+
+  mapping for zroc_code_attach
+    {
+      CodeUuid       = code_uuid;
+      CodeAttachUuid = code_attach_uuid;
+      Attachment         = attachment;
+      MimeType           = mimetype;
+      FileName           = filename;
+
+    }
+}

@@ -1,0 +1,86 @@
+@Metadata.layer: #CORE
+@Search.searchable: true
+
+@UI.headerInfo: {
+    typeName: 'Code',
+    typeNamePlural: 'Codes',
+    title: {
+    type: #STANDARD,
+    label: 'Code',
+    value: 'CodeUuid'
+    }
+}
+annotate entity ZC_ROC_CODE with
+{
+
+  @UI.facet: [       {  id: 'Code',
+                     purpose: #STANDARD,
+                     type: #IDENTIFICATION_REFERENCE,
+                     position: 10,
+                     label: 'Code Detail'  },
+                     
+                     {  id: 'CodeContent',
+                     targetQualifier: 'tqCodeContent',
+                     purpose: #STANDARD,
+                     type: #IDENTIFICATION_REFERENCE,
+                     position: 20,
+                     label: 'Code Content'  },
+
+                     { id: 'CodeAttach', 
+                     purpose: #STANDARD,
+                     type: #LINEITEM_REFERENCE,
+                     position: 30,
+                     label: 'Code Attachment',
+                     targetElement: '_CodeAttach'  }
+                     ]
+
+  @UI.lineItem: [{  position: 10} ]
+  @UI.identification: [{  position: 10 }]
+  @UI.hidden: true
+  CodeUuid;
+
+  @UI: { lineItem: [{  position: 20}],
+       selectionField: [{ position: 20 }],
+       identification: [{  position: 20}]
+     }
+  @Search.defaultSearchElement: true
+  @EndUserText.label: 'Title'
+  Title;
+
+  @UI: { lineItem: [{  position: 30}],
+         selectionField: [{ position: 30 }],
+         identification: [{  position: 30 }]
+       }
+  @Search.defaultSearchElement: true
+  @EndUserText.label: 'Description'
+  Description;
+
+  @UI: { lineItem: [{  position: 40}], identification: [{  position: 40 }] }
+  @EndUserText.label: 'Link URL'
+  Linkurl;
+  
+  @UI: { lineItem: [{  position: 50}],
+         identification: [{  position: 50 }]
+       }
+  @EndUserText.label: 'Category'
+  Category;
+
+  @UI: { lineItem: [{  position: 60}],
+         identification: [{  position: 60 }] }
+  @EndUserText.label: 'Sub Category'
+  Subcategory;
+
+  @UI: { lineItem: [{  position: 45}], identification: [{ qualifier:'tqCodeContent',  position: 10, inline: false }] }
+  @EndUserText.label: 'Content'
+  @UI.multiLineText: true
+  Content;
+
+  //  Localcreatedby;
+  //  Locallastchangedby;
+  //  Localcreatedat;
+  //  Locallastchangedat;
+  //  Lastchangedat;
+  //  /* Associations */
+  //  _CodeAttach;
+
+}

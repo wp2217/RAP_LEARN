@@ -1,0 +1,39 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+    typeName: 'CodeAttach',
+    typeNamePlural: 'CodeAttachments',
+    title: {
+    type: #STANDARD,
+    label: 'Code Attachments',
+    value: 'CodeAttachUuid'
+    }
+}
+annotate entity ZC_ROC_CODE_ATTACH with
+{
+  @UI.facet: [{      id: 'CodeAttach',
+                     purpose: #STANDARD,
+                     type: #IDENTIFICATION_REFERENCE,
+                     position: 10,
+                     label: 'Code Attachment'  }]
+
+  @UI.hidden: true
+  CodeUuid;
+
+  @UI.lineItem: [{ position: 10 }]
+  @UI.identification: [{  position: 10 }]
+  CodeAttachUuid;
+  
+  @UI.lineItem: [{ position: 20 }]
+  @UI.identification: [{  position: 20, label: 'Select File to Upload' }]
+  Attachment;
+
+  @UI.hidden: true
+  MimeType;
+
+  @UI.hidden: true
+  FileName;
+
+  //  /* Associations */
+  //  _Code;
+
+}

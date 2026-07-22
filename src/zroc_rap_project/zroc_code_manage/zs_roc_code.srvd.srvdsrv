@@ -1,0 +1,5 @@
+@EndUserText.label: 'Code Service'
+define service ZS_ROC_CODE {
+  expose ZC_ROC_CODE;
+  expose ZC_ROC_CODE_ATTACH;
+}
