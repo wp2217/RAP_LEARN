@@ -1,27 +1,74 @@
 @Metadata.layer: #CORE
+@Search.searchable: true
+@UI.headerInfo: {
+    typeName: 'Manage Invoice Settlement',
+    typeNamePlural: 'Settlements',
+    //typeImageUrl: 'sap-icon://flight',
+
+    title: {
+      type: #STANDARD,
+      value: 'SettleNo'
+    },
+
+    description: {
+      type: #STANDARD,
+      value: 'SellerName'
+    }
+}
 annotate entity ZC_ROC_INV_SET_H with
 {
+  @UI.facet: [
 
-  @UI.identification: [ {
-  position: 10
-  } ]
-  @UI.lineItem: [ {
-    position: 10
-  } ]
-  @UI.selectionField: [ {
-    position: 10
-  } ]
+             {  id: 'idDPBusinessType',
+              purpose: #HEADER,
+              type: #DATAPOINT_REFERENCE,    //按字段按顺序，显示在head区域
+              targetQualifier: 'tqBusinessType',
+              position: 10  },
+
+             {  id: 'idDPSettleStatus',
+              purpose: #HEADER,
+              type: #DATAPOINT_REFERENCE,
+              targetQualifier: 'tqSettleStatus',
+              position: 20 },
+
+
+             {  id: 'idDPInvoiceNo',
+              purpose: #HEADER,
+              type: #DATAPOINT_REFERENCE,
+              targetQualifier: 'tqInvoiceNo',
+              position: 30 },
+
+             {  id: 'idDPGrossAmount',
+              purpose: #HEADER,
+              type: #DATAPOINT_REFERENCE,
+              targetQualifier: 'tqGrossAmount',
+              position: 40  },
+
+  //**********************************************************************
+
+              {  id: 'Settlement',
+              purpose: #STANDARD,
+              type: #IDENTIFICATION_REFERENCE,//显示具体Object，结合当前节点metadata中UI.identification: [{  position: 30 }]显示字段（定义在当前页面，显示在下一个页面）
+              position: 10,
+              label: 'Settlement'  },   //Tab页签
+
+              { id: 'SettlementItem',
+              purpose: #STANDARD,
+              type: #LINEITEM_REFERENCE,   //子节点按行项目显示， 结合子节点metadata中@UI.lineItem: [{  position: 80}]显示字段（定义在下个页面，显示在下一个页面）
+              position: 20,
+              label: 'Items',          //Tab页签
+              targetElement: '_invItem'  }
+              ]
+
+
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.selectionField: [ { position: 10 } ]
+  @Search.defaultSearchElement: true
   SettleNo;
 
-  @UI.identification: [ {
-    position: 20
-  } ]
-  @UI.lineItem: [ {
-    position: 20
-  } ]
-  @UI.selectionField: [ {
-    position: 20
-  } ]
+  @UI.identification: [ { position: 20 } ]
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.selectionField: [ { position: 20 } ]
   @EndUserText.label: 'Invoice Number'
 
   @Consumption.valueHelpDefinition: [{
@@ -30,108 +77,61 @@ annotate entity ZC_ROC_INV_SET_H with
     { localElement: 'Bukrs',    element: 'Bukrs',    usage: #RESULT },
     { localElement: 'SellerName',  element: 'SellerName',   usage: #RESULT },
     { localElement: 'BuyerName', element: 'BuyerName', usage: #RESULT }
-  ]
-  }]
+  ] }]
+  @UI.dataPoint: {qualifier: 'tqInvoiceNo', title: 'Invoice No.'}
+  @Search.defaultSearchElement: true
   InvoiceNo;
 
-  @UI.identification: [ {
-  position: 30
-  } ]
-  @UI.lineItem: [ {
-    position: 30
-  } ]
-  @UI.selectionField: [ {
-    position: 30
-  } ]
+  @UI.lineItem: [ { position: 30 } ]
+  @UI.selectionField: [ { position: 30 } ]
+  @UI.dataPoint: {qualifier: 'tqSettleStatus', title: 'Status'}
+  SettleStatus;
+
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.selectionField: [ { position: 40 } ]
+  @UI.dataPoint: {qualifier: 'tqBusinessType', title: 'Business Type'}
+  @Consumption.valueHelpDefinition: [{
+    entity: { name: 'ZI_ROC_INV_BUS_TYPE_VH', element: 'StatusCode' } }]
   BusinessType;
 
-  @UI.identification: [ {
-  position: 40
-  } ]
-  @UI.lineItem: [ {
-    position: 40
-  } ]
-  @UI.selectionField: [ {
-    position: 40
-  } ]
+  @UI.identification: [ { position: 50 } ]
+  @UI.lineItem: [ { position: 50 } ]
+  @UI.selectionField: [ { position: 50 } ]
   SettleType;
-
-  @UI.identification: [ {
-  position: 50
-  } ]
-  @UI.lineItem: [ {
-    position: 50
-  } ]
-  @UI.selectionField: [ {
-    position: 50
-  } ]
-  SettleStatus;
 
   // TransactionEvent;
 
-  @UI.identification: [ {
-  position: 60
-  } ]
-  @UI.lineItem: [ {
-    position: 60
-  } ]
-  @UI.selectionField: [ {
-    position: 60
-  } ]
+  @UI.identification: [ { position: 60 } ]
+  @UI.lineItem: [ { position: 60 } ]
+  @UI.selectionField: [ { position: 60 } ]
   InvoiceType;
 
   //InvoiceTime;
 
-  @UI.identification: [ {
-  position: 70
-  } ]
-  @UI.lineItem: [ {
-    position: 70
-  } ]
-  @UI.selectionField: [ {
-    position: 70
-  } ]
+  @UI.identification: [ { position: 70 } ]
+  @UI.lineItem: [ { position: 70 } ]
+  @UI.selectionField: [ { position: 70 } ]
   Bukrs;
   // BuyerName;
-  @UI.identification: [ {
-  position: 80
-  } ]
-  @UI.lineItem: [ {
-    position: 80
-  } ]
-  @UI.selectionField: [ {
-    position: 80
-  } ]
+  @UI.identification: [ { position: 80 } ]
+  @UI.lineItem: [ { position: 80 } ]
+  @UI.selectionField: [ { position: 80 } ]
   Lifnr;
 
-  @UI.identification: [ {
-  position: 90
-  } ]
-  @UI.lineItem: [ {
-    position: 90
-  } ]
-  @UI.selectionField: [ {
-    position: 90
-  } ]
+  @UI.identification: [ { position: 90 } ]
+  @UI.lineItem: [ { position: 90 } ]
+  @UI.selectionField: [ { position: 90 } ]
+  @Search.defaultSearchElement: true
   SellerName;
 
-  @UI.identification: [ {
-  position: 100
-  } ]
-  @UI.lineItem: [ {
-    position: 100
-  } ]
-  @UI.selectionField: [ {
-    position: 100
-  } ]
+  @UI.identification: [ { position: 100 } ]
+  @UI.lineItem: [ { position: 100 } ]
+  @UI.selectionField: [ { position: 100 } ]
+  @UI.dataPoint: {qualifier: 'tqGrossAmount', title: 'Amount'}
   GrossAmount;
 
-  @UI.identification: [ {
-  position: 110
-  } ]
-  @UI.lineItem: [ {
-    position: 110
-  }  ]
+  @UI.identification: [ { position: 110 } ]
+  @UI.lineItem: [ { position: 110 } ]
   TaxAmount;
   //  NetAmount;
   //  SelectedTaxAmount;
