@@ -1,0 +1,127 @@
+managed;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_ROC_INV_SET_H //alias <alias_name>
+implementation in class zbp_i_roc_inv_set_h unique
+persistent table zroc_inv_set_h
+draft table zdroc_inv_set_h
+lock master total etag LastChangedAt
+etag master LastChangedAt
+authorization master ( instance )
+{
+  field ( readonly )
+  SettleNo,
+  CreatedBy,
+  CreatedAt,
+  LastChangedBy,
+  LastChangedAt;
+
+  create ( authorization : global );
+  update;
+  delete;
+  association _invItem { create; with draft; }
+
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for zroc_inv_set_h
+    {
+      SettleNo           = settle_no;
+      BusinessType       = business_type;
+      SettleType         = settle_type;
+      SettleStatus       = settle_status;
+      TransactionEvent   = transaction_event;
+      InvoiceNo          = invoice_no;
+      InvoiceType        = invoice_type;
+      InvoiceTime        = invoice_time;
+      Bukrs              = bukrs;
+      BuyerName          = buyer_name;
+      Lifnr              = lifnr;
+      SellerName         = seller_name;
+      GrossAmount        = gross_amount;
+      TaxAmount          = tax_amount;
+      NetAmount          = net_amount;
+      SelectedTaxAmount  = selected_tax_amount;
+      SelectedNetAmount  = selected_net_amount;
+      DiffTaxAmount      = diff_tax_amount;
+      DiffNetAmount      = diff_net_amount;
+      Mwskz              = mwskz;
+      TaxRate            = tax_rate;
+      Waers              = waers;
+      Bktxt              = bktxt;
+      Sgtxt              = sgtxt;
+      DpNo               = dp_no;
+      IdocNumber         = idoc_number;
+      AccountingDocument = accounting_document;
+      FiscalYear         = fiscal_year;
+      BatchCreated       = batch_created;
+      CreatedBy          = created_by;
+      CreatedAt          = created_at;
+      LastChangedBy      = last_changed_by;
+      LastChangedAt      = last_changed_at;
+    }
+}
+
+define behavior for ZI_ROC_INV_SET_I //alias <alias_name>
+implementation in class zbp_i_roc_inv_set_i unique
+persistent table zroc_inv_set_i
+draft table zdroc_inv_set_i
+lock dependent by _invHeader
+authorization dependent by _invHeader
+//etag master <field_name>
+{
+  update;
+  delete;
+  field ( readonly ) SettleNo, ItemNo;
+  association _invHeader { with draft; }
+
+  mapping for zroc_inv_set_i
+    {
+      SettleNo              = settle_no;
+      ItemNo                = item_no;
+      InvoiceNo             = invoice_no;
+      PurchaseOrder         = purchase_order;
+      PurchaseOrderItem     = purchase_order_item;
+      PoType                = po_type;
+      PoDate                = po_date;
+      PoChangedDate         = po_changed_date;
+      PoCreatedBy           = po_created_by;
+      Plant                 = plant;
+      StorageLocation       = storage_location;
+      Batch                 = batch;
+      Material              = material;
+      ShortText             = short_text;
+      Quantity              = quantity;
+      OrderUnit             = order_unit;
+      NetPrice              = net_price;
+      PriceUnit             = price_unit;
+      DocumentAmount        = document_amount;
+      PlannedDeliveryAmount = planned_delivery_amount;
+      Currency              = currency;
+      TaxCode               = tax_code;
+      TaxRate               = tax_rate;
+      TaxAmount             = tax_amount;
+      MaterialDocument      = material_document;
+      MaterialDocYear       = material_doc_year;
+      MaterialDocItem       = material_doc_item;
+      ReferenceDocument     = reference_document;
+      ConditionType         = condition_type;
+      ExternalDelivery      = external_delivery;
+      EntryDate             = entry_date;
+      EntryTime             = entry_time;
+      DebitCredit           = debit_credit;
+      GlAccountNpo          = gl_account_npo;
+      CostCenterNpo         = cost_center_npo;
+      AssignmentNpo         = assignment_npo;
+      ItemTextNpo           = item_text_npo;
+      DebitCreditNpo        = debit_credit_npo;
+      AmountNpo             = amount_npo;
+      TaxCodeNpo            = tax_code_npo;
+      TaxRateNpo            = tax_rate_npo;
+      TaxAmountNpo          = tax_amount_npo;
+    }
+}

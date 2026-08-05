@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZR_ROC_INVOICE'
+@MappingRole: true
+define role ZR_ROC_INVOICE {
+  grant select on ZR_ROC_INVOICE
+  where TRUE;
+}

@@ -1,0 +1,64 @@
+managed implementation in class ZBP_R_ROC_INVOICE unique;
+strict ( 2 );
+with draft;
+extensible;
+define behavior for ZR_ROC_INVOICE alias ZrRocInvoice
+persistent table zroc_invoice
+extensible
+draft table zroc_invoice_d
+etag master LastChangedAt
+lock master total etag LastChangedAt
+authorization master ( global )
+{
+  field ( readonly )
+  InvUUID,
+  CreatedBy,
+  CreatedAt,
+  LastChangedBy,
+  LastChangedAt;
+
+  field ( numbering : managed )
+  InvUUID;
+
+
+  create;
+  update;
+  delete;
+
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for zroc_invoice corresponding extensible
+    {
+      InvUUID       = INV_UUID;
+      InvoiceNo     = INVOICE_NO;
+      Bukrs         = BUKRS;
+      InvoiceDate   = INVOICE_DATE;
+      BuyerName     = BUYER_NAME;
+      BuyerTaxno    = BUYER_TAXNO;
+      Lifnr         = LIFNR;
+      SellerName    = SELLER_NAME;
+      SellerTaxno   = SELLER_TAXNO;
+      SellerBank    = SELLER_BANK;
+      NetAmount     = NET_AMOUNT;
+      GrossAmount   = GROSS_AMOUNT;
+      TaxAmount     = TAX_AMOUNT;
+      Waers         = WAERS;
+      RequestNo     = REQUEST_NO;
+      Remark        = REMARK;
+      InvCategory   = INV_CATEGORY;
+      InvStatus     = INV_STATUS;
+      InvType       = INV_TYPE;
+      BusinessType  = BUSINESS_TYPE;
+      PdfUrl        = PDF_URL;
+      XmlUrl        = XML_URL;
+      CreatedBy     = CREATED_BY;
+      CreatedAt     = CREATED_AT;
+      LastChangedBy = LAST_CHANGED_BY;
+      LastChangedAt = LAST_CHANGED_AT;
+    }
+
+}

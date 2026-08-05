@@ -1,0 +1,158 @@
+@Metadata.layer: #CORE
+annotate entity ZC_ROC_INV_SET_H with
+{
+
+  @UI.identification: [ {
+  position: 10
+  } ]
+  @UI.lineItem: [ {
+    position: 10
+  } ]
+  @UI.selectionField: [ {
+    position: 10
+  } ]
+  SettleNo;
+
+  @UI.identification: [ {
+    position: 20
+  } ]
+  @UI.lineItem: [ {
+    position: 20
+  } ]
+  @UI.selectionField: [ {
+    position: 20
+  } ]
+  @EndUserText.label: 'Invoice Number'
+
+  @Consumption.valueHelpDefinition: [{
+  entity: { name: 'ZI_ROC_INVOICE_VH', element: 'InvoiceNo' },
+  additionalBinding: [
+    { localElement: 'Bukrs',    element: 'Bukrs',    usage: #RESULT },
+    { localElement: 'SellerName',  element: 'SellerName',   usage: #RESULT },
+    { localElement: 'BuyerName', element: 'BuyerName', usage: #RESULT }
+  ]
+  }]
+  InvoiceNo;
+
+  @UI.identification: [ {
+  position: 30
+  } ]
+  @UI.lineItem: [ {
+    position: 30
+  } ]
+  @UI.selectionField: [ {
+    position: 30
+  } ]
+  BusinessType;
+
+  @UI.identification: [ {
+  position: 40
+  } ]
+  @UI.lineItem: [ {
+    position: 40
+  } ]
+  @UI.selectionField: [ {
+    position: 40
+  } ]
+  SettleType;
+
+  @UI.identification: [ {
+  position: 50
+  } ]
+  @UI.lineItem: [ {
+    position: 50
+  } ]
+  @UI.selectionField: [ {
+    position: 50
+  } ]
+  SettleStatus;
+
+  // TransactionEvent;
+
+  @UI.identification: [ {
+  position: 60
+  } ]
+  @UI.lineItem: [ {
+    position: 60
+  } ]
+  @UI.selectionField: [ {
+    position: 60
+  } ]
+  InvoiceType;
+
+  //InvoiceTime;
+
+  @UI.identification: [ {
+  position: 70
+  } ]
+  @UI.lineItem: [ {
+    position: 70
+  } ]
+  @UI.selectionField: [ {
+    position: 70
+  } ]
+  Bukrs;
+  // BuyerName;
+  @UI.identification: [ {
+  position: 80
+  } ]
+  @UI.lineItem: [ {
+    position: 80
+  } ]
+  @UI.selectionField: [ {
+    position: 80
+  } ]
+  Lifnr;
+
+  @UI.identification: [ {
+  position: 90
+  } ]
+  @UI.lineItem: [ {
+    position: 90
+  } ]
+  @UI.selectionField: [ {
+    position: 90
+  } ]
+  SellerName;
+
+  @UI.identification: [ {
+  position: 100
+  } ]
+  @UI.lineItem: [ {
+    position: 100
+  } ]
+  @UI.selectionField: [ {
+    position: 100
+  } ]
+  GrossAmount;
+
+  @UI.identification: [ {
+  position: 110
+  } ]
+  @UI.lineItem: [ {
+    position: 110
+  }  ]
+  TaxAmount;
+  //  NetAmount;
+  //  SelectedTaxAmount;
+  //  SelectedNetAmount;
+  //  DiffTaxAmount;
+  //  DiffNetAmount;
+  //  Mwskz;
+  //  TaxRate;
+  //  Waers;
+  //  Bktxt;
+  //  Sgtxt;
+  //  DpNo;
+  //  IdocNumber;
+  //  AccountingDocument;
+  //  FiscalYear;
+  //  BatchCreated;
+  //  CreatedBy;
+  //  CreatedAt;
+  //  LastChangedBy;
+  //  LastChangedAt;
+  //  /* Associations */
+  //  _invItem;
+
+}

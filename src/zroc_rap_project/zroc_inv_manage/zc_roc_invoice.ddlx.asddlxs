@@ -1,0 +1,319 @@
+@Metadata.layer: #CORE
+@UI.headerInfo.title.type: #STANDARD
+@UI.headerInfo.title.value: 'InvoiceNo'
+@UI.headerInfo.description.type: #STANDARD
+@UI.headerInfo.description.value: 'SellerName'
+annotate view ZC_ROC_INVOICE with
+{
+  @EndUserText.label: 'InvUUID'
+  @UI.facet: [ {
+    label: 'General Information',
+    id: 'GeneralInfo',
+    purpose: #STANDARD,
+    position: 10 ,
+    type: #IDENTIFICATION_REFERENCE
+  } ]
+  InvUUID;
+
+  @UI.identification: [ {
+    position: 20
+  } ]
+  @UI.lineItem: [ {
+    position: 20
+  } ]
+  @UI.selectionField: [ {
+    position: 20
+  } ]
+  @EndUserText.label: 'Invoice Number'
+
+  @Consumption.valueHelpDefinition: [{
+  entity: { name: 'ZI_ROC_INVOICE_VH', element: 'InvoiceNo' },
+  additionalBinding: [
+    { localElement: 'Bukrs',    element: 'Bukrs',    usage: #RESULT },
+    { localElement: 'InvoiceDate',   element: 'InvoiceDate',   usage: #RESULT },
+    { localElement: 'SellerName',  element: 'SellerName',   usage: #RESULT },
+    { localElement: 'BuyerName', element: 'BuyerName', usage: #RESULT }
+  ]
+  }]
+  InvoiceNo;
+
+  @UI.identification: [ {
+    position: 30
+  } ]
+  @UI.lineItem: [ {
+    position: 30
+  } ]
+  @UI.selectionField: [ {
+    position: 30
+  } ]
+  Bukrs;
+
+  @EndUserText.label: 'InvoiceDate'
+  @UI.identification: [ {
+    position: 40 ,
+    label: 'InvoiceDate'
+  } ]
+  @UI.lineItem: [ {
+    position: 40 ,
+    label: 'InvoiceDate'
+  } ]
+  @UI.selectionField: [ {
+    position: 40
+  } ]
+  InvoiceDate;
+
+  @EndUserText.label: 'BuyerName'
+  @UI.identification: [ {
+    position: 50 ,
+    label: 'BuyerName'
+  } ]
+  @UI.lineItem: [ {
+    position: 50 ,
+    label: 'BuyerName'
+  } ]
+  @UI.selectionField: [ {
+    position: 50
+  } ]
+  BuyerName;
+
+  @UI.identification: [ {
+    position: 60
+  } ]
+  @UI.lineItem: [ {
+    position: 60
+  } ]
+  @UI.selectionField: [ {
+    position: 60
+  } ]
+  BuyerTaxno;
+
+  @UI.identification: [ {
+    position: 70
+  } ]
+  @UI.lineItem: [ {
+    position: 70
+  } ]
+  @UI.selectionField: [ {
+    position: 70
+  } ]
+  Lifnr;
+
+  @EndUserText.label: 'SellerName'
+  @UI.identification: [ {
+    position: 80 ,
+    label: 'SellerName'
+  } ]
+  @UI.lineItem: [ {
+    position: 80 ,
+    label: 'SellerName'
+  } ]
+  @UI.selectionField: [ {
+    position: 80
+  } ]
+  SellerName;
+
+  @EndUserText.label: 'SellerTaxno'
+  @UI.identification: [ {
+    position: 90 ,
+    label: 'SellerTaxno'
+  } ]
+  @UI.lineItem: [ {
+    position: 90 ,
+    label: 'SellerTaxno'
+  } ]
+  @UI.selectionField: [ {
+    position: 90
+  } ]
+  SellerTaxno;
+
+  @EndUserText.label: 'SellerBank'
+  @UI.identification: [ {
+    position: 100 ,
+    label: 'SellerBank'
+  } ]
+  @UI.lineItem: [ {
+    position: 100 ,
+    label: 'SellerBank'
+  } ]
+  SellerBank;
+
+  @EndUserText.label: 'NetAmount'
+  @UI.identification: [ {
+    position: 110 ,
+    label: 'NetAmount'
+  } ]
+  @UI.lineItem: [ {
+    position: 110 ,
+    label: 'NetAmount'
+  } ]
+  @UI.selectionField: [ {
+    position: 110
+  } ]
+  NetAmount;
+
+  @EndUserText.label: 'GrossAmount'
+  @UI.identification: [ {
+    position: 120 ,
+    label: 'GrossAmount'
+  } ]
+  @UI.lineItem: [ {
+    position: 120 ,
+    label: 'GrossAmount'
+  } ]
+  @UI.selectionField: [ {
+    position: 120
+  } ]
+  GrossAmount;
+
+  @EndUserText.label: 'TaxAmount'
+  @UI.identification: [ {
+    position: 130 ,
+    label: 'TaxAmount'
+  } ]
+  @UI.lineItem: [ {
+    position: 130 ,
+    label: 'TaxAmount'
+  } ]
+  TaxAmount;
+
+  @EndUserText.label: 'RequestNo'
+  @UI.identification: [ {
+    position: 140 ,
+    label: 'RequestNo'
+  } ]
+  @UI.lineItem: [ {
+    position: 140 ,
+    label: 'RequestNo'
+  } ]
+  RequestNo;
+
+  @EndUserText.label: 'Remark'
+  @UI.identification: [ {
+    position: 150 ,
+    label: 'Remark'
+  } ]
+  @UI.lineItem: [ {
+    position: 150 ,
+    label: 'Remark'
+  } ]
+  @UI.selectionField: [ {
+    position: 150
+  } ]
+  Remark;
+
+  @EndUserText.label: 'InvCategory'
+  @UI.identification: [ {
+    position: 160 ,
+    label: 'InvCategory'
+  } ]
+  @UI.lineItem: [ {
+    position: 160 ,
+    label: 'InvCategory'
+  } ]
+  @UI.selectionField: [ {
+    position: 160
+  } ]
+  InvCategory;
+
+  @EndUserText.label: 'InvStatus'
+  @UI.identification: [ {
+    position: 170 ,
+    label: 'InvStatus'
+  } ]
+  @UI.lineItem: [ {
+    position: 170 ,
+    label: 'InvStatus'
+  } ]
+  @UI.selectionField: [ {
+    position: 170
+  } ]
+  InvStatus;
+
+  @EndUserText.label: 'InvType'
+  @UI.identification: [ {
+    position: 180 ,
+    label: 'InvType'
+  } ]
+  @UI.lineItem: [ {
+    position: 180 ,
+    label: 'InvType'
+  } ]
+  @UI.selectionField: [ {
+    position: 180
+  } ]
+  InvType;
+
+  @EndUserText.label: 'BusinessType'
+  @UI.identification: [ {
+    position: 190 ,
+    label: 'BusinessType'
+  } ]
+  @UI.lineItem: [ {
+    position: 190 ,
+    label: 'BusinessType'
+  } ]
+  @UI.selectionField: [ {
+    position: 190
+  } ]
+  BusinessType;
+
+  @EndUserText.label: 'PdfUrl'
+  @UI.identification: [ {
+    position: 200 ,
+    label: 'PdfUrl'
+  } ]
+  @UI.lineItem: [ {
+    position: 200 ,
+    label: 'PdfUrl'
+  } ]
+  PdfUrl;
+
+  @EndUserText.label: 'XmlUrl'
+  @UI.identification: [ {
+    position: 210 ,
+    label: 'XmlUrl'
+  } ]
+  @UI.lineItem: [ {
+    position: 210 ,
+    label: 'XmlUrl'
+  } ]
+  XmlUrl;
+
+  @UI.identification: [ {
+    position: 220
+  } ]
+  @UI.lineItem: [ {
+    position: 220
+  } ]
+  @UI.selectionField: [ {
+    position: 220
+  } ]
+  CreatedBy;
+
+  @UI.identification: [ {
+    position: 230
+  } ]
+  @UI.lineItem: [ {
+    position: 230
+  } ]
+  @UI.selectionField: [ {
+    position: 230
+  } ]
+  CreatedAt;
+
+  @UI.identification: [ {
+    position: 240
+  } ]
+  @UI.lineItem: [ {
+    position: 240
+  } ]
+  LastChangedBy;
+
+  @UI.identification: [ {
+    position: 250
+  } ]
+  @UI.lineItem: [ {
+    position: 250
+  } ]
+  LastChangedAt;
+}

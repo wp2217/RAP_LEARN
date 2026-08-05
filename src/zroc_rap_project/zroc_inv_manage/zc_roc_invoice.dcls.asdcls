@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZC_ROC_INVOICE'
+@MappingRole: true
+define role ZC_ROC_INVOICE {
+  grant select on ZC_ROC_INVOICE
+  where INHERITING CONDITIONS FROM ENTITY ZR_ROC_INVOICE REPLACING { ROOT WITH _BaseEntity };
+}

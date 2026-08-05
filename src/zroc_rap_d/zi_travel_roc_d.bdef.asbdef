@@ -6,10 +6,9 @@ define behavior for ZI_TRAVEL_ROC_D //alias <alias_name>
 implementation in class zbp_i_travel_roc_d unique
 persistent table /dmo/a_travel_d
 draft table zdr_roc_travel_d  //名字不能太长，太长不能创建
-lock master
-total etag LastChangedAt   //for Draft Object optimistic concurrency control
-authorization master ( global, instance )
+lock master total etag LastChangedAt   //for Draft Object optimistic concurrency control
 etag master LocalLastChangedAt //for Active Object optimistic concurrency control
+authorization master ( global, instance )
 {
   create ( precheck );   //Incomes Value数据(即页面修改的数据)权限检查
   update ( precheck );   //Incomes Value数据(即页面修改的数据)权限检查

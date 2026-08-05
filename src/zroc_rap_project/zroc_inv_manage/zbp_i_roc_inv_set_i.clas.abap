@@ -1,0 +1,5 @@
+CLASS zbp_i_roc_inv_set_i DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_roc_inv_set_h.
+ENDCLASS.
+
+CLASS zbp_i_roc_inv_set_i IMPLEMENTATION.
+ENDCLASS.

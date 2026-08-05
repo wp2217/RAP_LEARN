@@ -1,0 +1,28 @@
+projection;
+strict ( 2 );
+use draft;
+use side effects;
+
+define behavior for ZC_ROC_INV_SET_H //alias <alias_name>
+{
+  use create;
+  use update;
+  use delete;
+
+  use association _invItem { create; with draft; }
+
+  // for Draft
+  use action Edit;
+  use action Activate;
+  use action Resume;
+  use action Discard;
+  use action Prepare;
+}
+
+define behavior for ZC_ROC_INV_SET_I //alias <alias_name>
+{
+  use update;
+  use delete;
+
+  use association _invHeader { with draft; }
+}
