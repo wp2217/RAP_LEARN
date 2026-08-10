@@ -96,7 +96,13 @@ annotate entity ZC_ROC_INV_SET_H with
 
   @UI.identification: [ { position: 30 } ]
   @UI.lineItem: [ { position: 30 } ]
-  @EndUserText.label: 'Transaction / Event'
+//  @Consumption.valueHelpDefinition: [{
+//   entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
+//   additionalBinding: [
+//     { localConstant: 'ZDROC_TRANS_EVENT', element: 'DomainName', usage: #FILTER }],
+//   distinctValues: true
+//  }]
+  @Consumption.valueHelpDefinition: [{ entity: { name: 'ZI_ROC_TRANS_EVENT_VH', element: 'Code' } }]
   TransactionEvent;
 
   @UI.lineItem: [ { position: 40 } ]

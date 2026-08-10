@@ -7,10 +7,22 @@ define root view entity ZC_ROC_INV_SET_H
   as projection on ZI_ROC_INV_SET_H
 {
   key SettleNo,
+      @ObjectModel.text.element: [ 'BusTypeText' ]
       BusinessType,
+      _BUS_TYPE_VH.Text      as BusTypeText,
+
+      @ObjectModel.text.element: [ 'SettleTypeText' ]
       SettleType,
+      _SETTLE_TYPE_VH.Text   as SettleTypeText,
+
+      @ObjectModel.text.element: [ 'SettleStatusText' ]
       SettleStatus,
+      _SETTLE_STATUS_VH.Text as SettleStatusText,
+
+      @ObjectModel.text.element: [ 'TransEventText' ]
       TransactionEvent,
+      _TRANS_EVENT_VH.Text   as TransEventText,
+
       InvoiceNo,
       InvoiceType,
       InvoiceTime,
@@ -63,5 +75,6 @@ define root view entity ZC_ROC_INV_SET_H
       LastChangedBy,
       LastChangedAt,
       /* Associations */
-      _invItem : redirected to composition child ZC_ROC_INV_SET_I
+      _invItem : redirected to composition child ZC_ROC_INV_SET_I,
+      _BUS_TYPE_VH
 }

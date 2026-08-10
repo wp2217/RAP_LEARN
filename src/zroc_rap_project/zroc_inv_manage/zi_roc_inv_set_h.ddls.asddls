@@ -3,8 +3,13 @@
 @Metadata.ignorePropagatedAnnotations: true
 define root view entity ZI_ROC_INV_SET_H
   as select from zroc_inv_set_h
-  composition [0..*] of ZI_ROC_INV_SET_I as _invItem
+  composition [0..*] of ZI_ROC_INV_SET_I        as _invItem
+  association [0..1] to ZI_ROC_INV_BUS_TYPE_VH  as _BUS_TYPE_VH      on $projection.BusinessType = _BUS_TYPE_VH.Code
+  association [0..1] to ZI_ROC_SETTLE_TYPE_VH   as _SETTLE_TYPE_VH   on $projection.SettleType = _SETTLE_TYPE_VH.Code
+  association [0..1] to ZI_ROC_SETTLE_STATUS_VH as _SETTLE_STATUS_VH on $projection.SettleStatus = _SETTLE_STATUS_VH.Code
+  association [0..1] to ZI_ROC_TRANS_EVENT_VH   as _TRANS_EVENT_VH   on $projection.TransactionEvent = _TRANS_EVENT_VH.Code
 {
+
   key settle_no           as SettleNo,
       business_type       as BusinessType,
       settle_type         as SettleType,
@@ -50,5 +55,10 @@ define root view entity ZI_ROC_INV_SET_H
       last_changed_by     as LastChangedBy,
       @Semantics.systemDateTime.localInstanceLastChangedAt: true
       last_changed_at     as LastChangedAt,
-      _invItem // Make association public
+
+      _invItem, // Make association public
+      _BUS_TYPE_VH,
+      _SETTLE_TYPE_VH,
+      _SETTLE_STATUS_VH,
+      _TRANS_EVENT_VH
 }

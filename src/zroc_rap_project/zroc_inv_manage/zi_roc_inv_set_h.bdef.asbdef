@@ -9,6 +9,7 @@ draft table zdroc_inv_set_h
 lock master total etag LastChangedAt
 etag master LastChangedAt
 authorization master ( instance )
+early numbering
 {
   field ( readonly )
   SettleNo,
@@ -95,6 +96,7 @@ persistent table zroc_inv_set_i
 draft table zdroc_inv_set_i
 lock dependent by _invHeader
 authorization dependent by _invHeader
+early numbering
 //etag master <field_name>
 {
   update;
