@@ -18,96 +18,74 @@
 annotate entity ZC_ROC_INV_SET_H with
 {
   @UI.facet: [
-
-             {  id: 'idDPBusinessType',
+  //*********************Header Start*********************************************
+             {  id: 'HeaderInfo',
               purpose: #HEADER,
-              type: #DATAPOINT_REFERENCE,    //按字段按顺序，显示在head区域
-              targetQualifier: 'tqBusinessType',
+              type: #FIELDGROUP_REFERENCE,
+              targetQualifier: 'tqHeaderInfo',
               position: 10  },
 
-             {  id: 'idDPSettleStatus',
+             {  id: 'HeaderNetAmount',
               purpose: #HEADER,
-              type: #DATAPOINT_REFERENCE,
-              targetQualifier: 'tqSettleStatus',
+              type: #FIELDGROUP_REFERENCE,
+              targetQualifier: 'tqHeaderNetAmount',
               position: 20 },
 
-
-             {  id: 'idDPInvoiceNo',
+             {  id: 'HeaderTaxAmount',
               purpose: #HEADER,
-              type: #DATAPOINT_REFERENCE,
-              targetQualifier: 'tqInvoiceNo',
+              type: #FIELDGROUP_REFERENCE,
+              targetQualifier: 'tqHeaderTaxAmount',
               position: 30 },
 
-             {  id: 'idDPGrossAmount',
-              purpose: #HEADER,
-              type: #DATAPOINT_REFERENCE,
-              targetQualifier: 'tqGrossAmount',
-              position: 40  },
+  //*****************Header End*********************************************
 
-  //**********************************************************************
-
-              {  id: 'Settlement',
+  //*****************Tab Begin*********************************************
+              {  id: 'TabSettlement',
               purpose: #STANDARD,
-              type: #IDENTIFICATION_REFERENCE,//显示具体Object，结合当前节点metadata中UI.identification: [{  position: 30 }]显示字段（定义在当前页面，显示在下一个页面）
+              type: #COLLECTION,//显示具体Object，结合当前节点metadata中UI.identification: [{  position: 30 }]显示字段（定义在当前页面，显示在下一个页面）
               position: 10,
-              label: 'Invoice Data'  },   //Tab页签
+              label: 'Invoice Selection & Basic Data'  },   //Tab页签
 
               { id: 'SettlementItem',
               purpose: #STANDARD,
               type: #LINEITEM_REFERENCE,   //子节点按行项目显示， 结合子节点metadata中@UI.lineItem: [{  position: 80}]显示字段（定义在下个页面，显示在下一个页面）
               position: 20,
               label: 'GR Items',          //Tab页签
-              targetElement: '_invItem'  }
+              targetElement: '_invItem'  },
+
+  //*****************Tab End*********************************************
+
+  //*****************Section Begin*********************************************
+              {  id:               'Inv_Selection',
+                 parentId:         'TabSettlement',
+                 purpose:          #STANDARD,
+                 type:             #FIELDGROUP_REFERENCE, //#IDENTIFICATION_REFERENCE,
+                 label:            'Invoice Selection',
+                 targetQualifier:  'tqInv_Selection',
+                 position:         10 },
+
+              {  id:               'Settle_Text',
+                 parentId:         'TabSettlement',
+                 purpose:          #STANDARD,
+                 type:             #FIELDGROUP_REFERENCE, //#IDENTIFICATION_REFERENCE,
+                 label:            'Settlement Type & Text',
+                 targetQualifier:  'tqSettle_Text',
+                 position:         20 }
+
               ]
 
+  //*****************Section End*********************************************
 
+  //**********************Header Field Begin******************************************
   @UI.lineItem: [ { position: 10 } ]
   @UI.selectionField: [ { position: 10 } ]
   @Search.defaultSearchElement: true
   @EndUserText.label: 'Settlement No.'
   SettleNo;
 
-  @UI.identification: [ { position: 10 } ]
   @UI.lineItem: [ { position: 20 } ]
-  @UI.selectionField: [ { position: 20 } ]
-  @EndUserText.label: 'Invoice Number'
-
-  @Consumption.valueHelpDefinition: [{
-  entity: { name: 'ZI_ROC_INVOICE_VH', element: 'InvoiceNo' },
-  additionalBinding: [
-    { localElement: 'Bukrs',    element: 'Bukrs',    usage: #RESULT },
-    { localElement: 'SellerName',  element: 'SellerName',   usage: #RESULT },
-    { localElement: 'BuyerName', element: 'BuyerName', usage: #RESULT }
-  ] }]
-  @UI.dataPoint: {qualifier: 'tqInvoiceNo', title: 'Invoice No.'}
-  @Search.defaultSearchElement: true
-  InvoiceNo;
-
-  @UI.identification: [ { position: 20 } ]
-  @UI.lineItem: [ { position: 20 } ]
-  @UI.selectionField: [ { position: 30 } ]
-  @Consumption.valueHelpDefinition: [{
-    entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
-    additionalBinding: [
-      { localConstant: 'ZDROC_SETTLE_TYPE', element: 'DomainName', usage: #FILTER }],
-    distinctValues: true
-  }]
-  SettleType;
-
-  @UI.identification: [ { position: 30 } ]
-  @UI.lineItem: [ { position: 30 } ]
-//  @Consumption.valueHelpDefinition: [{
-//   entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
-//   additionalBinding: [
-//     { localConstant: 'ZDROC_TRANS_EVENT', element: 'DomainName', usage: #FILTER }],
-//   distinctValues: true
-//  }]
-  @Consumption.valueHelpDefinition: [{ entity: { name: 'ZI_ROC_TRANS_EVENT_VH', element: 'Code' } }]
-  TransactionEvent;
-
-  @UI.lineItem: [ { position: 40 } ]
   @UI.selectionField: [ { position: 40 } ]
-  @UI.dataPoint: {qualifier: 'tqSettleStatus', title: 'Status'}
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderInfo',position: 10} ]
   @Consumption.valueHelpDefinition: [{
   entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
   additionalBinding: [
@@ -116,9 +94,9 @@ annotate entity ZC_ROC_INV_SET_H with
   }]
   SettleStatus;
 
-  @UI.lineItem: [ { position: 50 } ]
+  @UI.lineItem: [ { position: 30 } ]
   @UI.selectionField: [ { position: 50 } ]
-  @UI.dataPoint: {qualifier: 'tqBusinessType', title: 'Business Type'}
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderInfo',position: 20} ]
   @Consumption.valueHelpDefinition: [{
     entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
     additionalBinding: [
@@ -127,52 +105,127 @@ annotate entity ZC_ROC_INV_SET_H with
   }]
   BusinessType;
 
-  @UI.identification: [ { position: 40 } ]
-  @UI.lineItem: [ { position: 70 } ]
-  @UI.selectionField: [ { position: 60 } ]
-  Bukrs;
-
-  @UI.identification: [ { position: 50 } ]
-  @UI.lineItem: [ { position: 80 } ]
-  @UI.selectionField: [ { position: 70 } ]
-  Lifnr;
-
-
-  @UI.identification: [ { position: 60 } ]
-  @UI.lineItem: [ { position: 60 } ]
-  @UI.selectionField: [ { position: 80 } ]
-  @EndUserText.label: 'Invoice Type'
-  InvoiceType;
-
-  @UI.identification: [ { position: 70 } ]
-  @UI.lineItem: [ { position: 60 } ]
-  @UI.selectionField: [ { position: 90 } ]
-  @EndUserText.label: 'Invoice Date'
-  InvoiceTime;
-
-
-
-  @UI.identification: [ { position: 80 } ]
-  @UI.lineItem: [ { position: 100 } ]
+  @UI.lineItem: [ { position: 40 } ]
   @UI.selectionField: [ { position: 100 } ]
-  @UI.dataPoint: {qualifier: 'tqGrossAmount', title: 'Amount'}
   @EndUserText.label: 'Gross Amount'
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderInfo', position: 30}, { qualifier: 'tqInv_Selection', position: 50}]
   GrossAmount;
 
-  @UI.identification: [ { position: 90 } ]
-  @UI.lineItem: [ { position: 110 } ]
+  @UI.lineItem: [ { position: 50 } ]
+  @EndUserText.label: 'Net Amount'
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderNetAmount', position: 10}, { qualifier: 'tqInv_Selection', position: 60}]
+  NetAmount;
+
+  @EndUserText.label: 'Sellect Net Amount '
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderNetAmount', position: 20}]
+  SelectedNetAmount;
+
+  @EndUserText.label: 'Differ Net Amount '
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderNetAmount', position: 30}]
+  DiffNetAmount;
+
+
+  @UI.lineItem: [ { position: 60} ]
   @EndUserText.label: 'Tax Amount'
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderTaxAmount', position: 10}, { qualifier: 'tqInv_Selection', position: 70}]
   TaxAmount;
-  //  NetAmount;
-  //  SelectedTaxAmount;
-  //  SelectedNetAmount;
-  //  DiffTaxAmount;
-  //  DiffNetAmount;
+
+  @EndUserText.label: 'Sellect Tax Amount '
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderTaxAmount', position: 20}]
+  SelectedTaxAmount;
+
+  @EndUserText.label: 'Differ Tax Amount '
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderTaxAmount', position: 30}]
+  DiffTaxAmount;
+  //**********************Header Field End******************************************
+
+  //**********************Invoice Selection Field Begin******************************************
+  @UI.lineItem: [ { position: 15 } ]
+  @UI.selectionField: [ { position: 20 } ]
+  @EndUserText.label: 'Invoice Number'
+  @UI.fieldGroup:     [ { qualifier: 'tqInv_Selection', position: 10, groupLabel:'Invoice Selection'}]
+
+  @Consumption.valueHelpDefinition: [{
+  entity: { name: 'ZI_ROC_INVOICE_VH', element: 'InvoiceNo' },
+  additionalBinding: [
+    { localElement: 'Bukrs',    element: 'Bukrs',    usage: #RESULT },
+    { localElement: 'SellerName',  element: 'SellerName',   usage: #RESULT },
+    { localElement: 'BuyerName', element: 'BuyerName', usage: #RESULT },
+    { localElement: 'InvoiceDate', element: 'InvoiceDate', usage: #RESULT },
+    { localElement: 'NetAmount', element: 'NetAmount', usage: #RESULT },
+    { localElement: 'GrossAmount', element: 'GrossAmount', usage: #RESULT },
+    { localElement: 'TaxAmount', element: 'TaxAmount', usage: #RESULT },
+    { localElement: 'Waers', element: 'Waers', usage: #RESULT },
+    { localElement: 'Bktxt', element: 'Remark', usage: #RESULT }
+  ] }]
+  @Search.defaultSearchElement: true
+  InvoiceNo;
+
+  @UI.lineItem: [ { position: 70 } ]
+  @UI.selectionField: [ { position: 60 } ]
+  @UI.fieldGroup:     [ { qualifier: 'tqInv_Selection', position: 20}]
+  Bukrs;
+
+  @UI.lineItem: [ { position: 80 } ]
+  @UI.selectionField: [ { position: 70 } ]
+  @UI.fieldGroup:     [ { qualifier: 'tqInv_Selection', position: 30}]
+  Lifnr;
+
+  @UI.lineItem: [ { position: 90 } ]
+  @UI.selectionField: [ { position: 90 } ]
+  @EndUserText.label: 'Invoice Date'
+  @UI.fieldGroup:     [ { qualifier: 'tqInv_Selection', position: 40}]
+  InvoiceDate;
+  //**********************Invoice Selection Field End******************************************
+
+
+  //**********************Text Field End******************************************
+  
+    @UI.lineItem: [ { position: 16 } ]
+  @UI.selectionField: [ { position: 30 } ]
+  @UI.fieldGroup:     [ { qualifier: 'tqSettle_Text', position: 10}]
+  @Consumption.valueHelpDefinition: [{
+    entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
+    additionalBinding: [
+      { localConstant: 'ZDROC_SETTLE_TYPE', element: 'DomainName', usage: #FILTER }],
+    distinctValues: true
+  }]
+  SettleType;
+
+  @UI.lineItem: [ { position: 17 } ]
+  @UI.fieldGroup:     [ { qualifier: 'tqSettle_Text', position: 20}]
+  //  @Consumption.valueHelpDefinition: [{
+  //   entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
+  //   additionalBinding: [
+  //     { localConstant: 'ZDROC_TRANS_EVENT', element: 'DomainName', usage: #FILTER }],
+  //   distinctValues: true
+  //  }]
+  @Consumption.valueHelpDefinition: [{ entity: { name: 'ZI_ROC_TRANS_EVENT_VH', element: 'Code' } }]
+  TransactionEvent;
+  
+  @UI.lineItem: [ { position: 100 } ]
+  @UI.selectionField: [ { position: 90 } ]
+  @EndUserText.label: 'Header Text'
+  @UI.fieldGroup:     [ { qualifier: 'tqSettle_Text', position: 30}]
+  Bktxt;
+
+  @UI.lineItem: [ { position: 110 } ]
+  @EndUserText.label: 'Assignment Text'
+  @UI.fieldGroup:     [ { qualifier: 'tqSettle_Text', position: 40}]
+  Sgtxt;
+  //**********************Text Field End******************************************
+
+
+  //
+  //
+  //
+  //  ;
+  //
   //  Mwskz;
   //  TaxRate;
   //  Waers;
-  //  Bktxt;
-  //  Sgtxt;
+  //  ;
+  //  ;
   //  DpNo;
   //  IdocNumber;
   //  AccountingDocument;

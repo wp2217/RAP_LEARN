@@ -25,7 +25,7 @@ define root view entity ZC_ROC_INV_SET_H
 
       InvoiceNo,
       InvoiceType,
-      InvoiceTime,
+      InvoiceDate,
       @ObjectModel.text.element: [ 'BuyerName' ]
       Bukrs,
       BuyerName,

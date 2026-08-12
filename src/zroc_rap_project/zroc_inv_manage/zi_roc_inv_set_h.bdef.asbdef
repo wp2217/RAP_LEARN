@@ -13,33 +13,18 @@ early numbering
 {
   field ( readonly )
   SettleNo,
-
-  BusinessType,
-  SettleStatus,
-  InvoiceType,
-  InvoiceTime,
-  BuyerName,
-  SellerName,
-  GrossAmount,
-  TaxAmount,
-  NetAmount,
-  SelectedTaxAmount,
-  SelectedNetAmount,
-  DiffTaxAmount,
-  DiffNetAmount,
-  Mwskz,
-  TaxRate,
-  Waers,
-  DpNo,
-  IdocNumber,
-  AccountingDocument,
-  FiscalYear,
-  BatchCreated,
-
   CreatedBy,
   CreatedAt,
   LastChangedBy,
   LastChangedAt;
+
+  field ( readonly )
+  GrossAmount,
+  NetAmount,
+  TaxAmount,
+  InvoiceDate;
+
+  field ( mandatory ) InvoiceNo, Bukrs, Lifnr, SettleType, TransactionEvent;
 
   create ( authorization : global );
   update;
@@ -52,6 +37,10 @@ early numbering
   draft action Resume;
   draft determine action Prepare;
 
+  //发票号码变化时自动获取票面信息
+  determination setInvoiceData on modify { field InvoiceNo; }
+
+
   mapping for zroc_inv_set_h
     {
       SettleNo           = settle_no;
@@ -61,7 +50,7 @@ early numbering
       TransactionEvent   = transaction_event;
       InvoiceNo          = invoice_no;
       InvoiceType        = invoice_type;
-      InvoiceTime        = invoice_time;
+      InvoiceDate        = invoice_Date;
       Bukrs              = bukrs;
       BuyerName          = buyer_name;
       Lifnr              = lifnr;

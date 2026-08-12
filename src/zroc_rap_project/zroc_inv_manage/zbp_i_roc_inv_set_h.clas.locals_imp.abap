@@ -1,4 +1,4 @@
-CLASS lhc_ZI_ROC_INV_SET_H DEFINITION INHERITING FROM cl_abap_behavior_handler.
+CLASS lhc_zi_roc_inv_set_h DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.
 
     METHODS get_instance_authorizations FOR INSTANCE AUTHORIZATION
@@ -6,6 +6,8 @@ CLASS lhc_ZI_ROC_INV_SET_H DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
       IMPORTING REQUEST requested_authorizations FOR zi_roc_inv_set_h RESULT result.
+    METHODS setinvoicedata FOR DETERMINE ON MODIFY
+      IMPORTING keys FOR zi_roc_inv_set_h~setinvoicedata.
     METHODS earlynumbering_cba_invitem FOR NUMBERING
       IMPORTING entities FOR CREATE zi_roc_inv_set_h\_invitem.
 
@@ -14,7 +16,7 @@ CLASS lhc_ZI_ROC_INV_SET_H DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
 ENDCLASS.
 
-CLASS lhc_ZI_ROC_INV_SET_H IMPLEMENTATION.
+CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
 
   METHOD get_instance_authorizations.
   ENDMETHOD.
@@ -62,7 +64,7 @@ CLASS lhc_ZI_ROC_INV_SET_H IMPLEMENTATION.
       ls_mapped-%cid = ls_entities-%cid.
       ls_mapped-%is_draft = ls_entities-%is_draft.
 
-      ls_mapped-SettleNo = lv_number+8(12).
+      ls_mapped-settleno = lv_number+8(12).
       lv_number += 1.
 
       APPEND ls_mapped TO mapped-zi_roc_inv_set_h.
@@ -70,7 +72,51 @@ CLASS lhc_ZI_ROC_INV_SET_H IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD earlynumbering_cba_Invitem.
+  METHOD earlynumbering_cba_invitem.
+  ENDMETHOD.
+
+  METHOD setinvoicedata.
+
+    READ ENTITIES OF zi_roc_inv_set_h IN LOCAL MODE
+      ENTITY zi_roc_inv_set_h
+      ALL FIELDS
+      "FIELDS ( InvoiceNo )
+      WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_set_h).
+
+    IF lt_set_h[] IS NOT INITIAL.
+      SELECT *
+        FROM zroc_invoice
+         FOR ALL ENTRIES IN @lt_set_h
+        WHERE invoice_no = @lt_set_h-invoiceno
+         INTO TABLE @DATA(lt_invoice).
+
+      SORT lt_invoice BY invoice_no.
+
+      LOOP AT lt_set_h INTO DATA(ls_set_h).
+        READ TABLE lt_invoice INTO DATA(ls_invoice)
+          WITH KEY invoice_no = ls_set_h-invoiceno
+          BINARY SEARCH.
+
+        IF sy-subrc = 0.
+          ls_set_h-grossamount = ls_invoice-gross_amount.
+          ls_set_h-netamount = ls_invoice-net_amount.
+          ls_set_h-taxamount = ls_invoice-tax_amount.
+          ls_set_h-invoicedate = ls_invoice-invoice_date.
+          MODIFY lt_set_h FROM ls_set_h.
+        ENDIF.
+      ENDLOOP.
+
+      MODIFY ENTITIES OF zi_roc_inv_set_h IN LOCAL MODE
+        ENTITY zi_roc_inv_set_h
+        UPDATE FIELDS ( grossamount netamount taxamount invoicedate )
+        WITH CORRESPONDING #( lt_set_h ).
+
+    ENDIF.
+
+
+
+
   ENDMETHOD.
 
 ENDCLASS.
