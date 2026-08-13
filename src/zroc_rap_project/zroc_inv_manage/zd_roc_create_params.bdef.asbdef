@@ -1,0 +1,6 @@
+abstract;
+define behavior for ZD_ROC_CREATE_PARAMS
+{
+
+  field ( mandatory ) CompanyCode, BusinessType, SettleType;
+}

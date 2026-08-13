@@ -17,6 +17,9 @@ define behavior for ZC_ROC_INV_SET_H //alias <alias_name>
   use action Resume;
   use action Discard;
   use action Prepare;
+
+
+  use action createWithParams;
 }
 
 define behavior for ZC_ROC_INV_SET_I //alias <alias_name>

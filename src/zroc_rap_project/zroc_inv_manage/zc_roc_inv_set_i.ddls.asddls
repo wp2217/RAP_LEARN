@@ -1,6 +1,7 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Consume view of ZI_ROC_INV_SET_I'
 @Metadata.ignorePropagatedAnnotations: true
+@Metadata.allowExtensions: true
 define view entity ZC_ROC_INV_SET_I
   as projection on ZI_ROC_INV_SET_I
 {

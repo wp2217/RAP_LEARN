@@ -9,6 +9,7 @@ define view entity ZI_ROC_TRANS_EVENT_VH
                                                                                                 and Txt.value_position = Val.value_position
                                                                                                 and Txt.language       = $session.system_language
 {
+  @ObjectModel.text.element: [ 'Text' ]
   key Val.value_low as Code,
       @Search.defaultSearchElement: true
       Txt.text      as Text
