@@ -56,20 +56,20 @@ annotate entity ZC_ROC_INV_SET_H with
   //*****************Tab End*********************************************
 
   //*****************Section Begin*********************************************
-              {  id:               'Inv_Selection',
+              {  id:               'InvSelection',
                  parentId:         'TabSettlement',
                  purpose:          #STANDARD,
                  type:             #FIELDGROUP_REFERENCE, //#IDENTIFICATION_REFERENCE,
                  label:            'Invoice Selection',
-                 targetQualifier:  'tqInv_Selection',
+                 targetQualifier:  'tqInvSelection',
                  position:         10 },
 
-              {  id:               'Settle_Text',
+              {  id:               'SettleText',
                  parentId:         'TabSettlement',
                  purpose:          #STANDARD,
                  type:             #FIELDGROUP_REFERENCE, //#IDENTIFICATION_REFERENCE,
                  label:            'Settlement Type & Text',
-                 targetQualifier:  'tqSettle_Text',
+                 targetQualifier:  'tqSettleText',
                  position:         20 }
 
               ]
@@ -78,6 +78,7 @@ annotate entity ZC_ROC_INV_SET_H with
 
   //**********************Header Field Begin******************************************
   @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 }, { type: #FOR_ACTION, dataAction: 'getGRItem', label: 'Get GR Items' } ]
   @UI.selectionField: [ { position: 10 } ]
   @Search.defaultSearchElement: true
   @EndUserText.label: 'Settlement No.'
@@ -125,12 +126,12 @@ annotate entity ZC_ROC_INV_SET_H with
   @UI.lineItem: [ { position: 40 } ]
   @UI.selectionField: [ { position: 100 } ]
   @EndUserText.label: 'Gross Amount'
-  @UI.fieldGroup:     [ { qualifier: 'tqHeaderInfo', position: 50}, { qualifier: 'tqInv_Selection', position: 50}]
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderInfo', position: 50}, { qualifier: 'tqInvSelection', position: 50}]
   GrossAmount;
 
   @UI.lineItem: [ { position: 50 } ]
   @EndUserText.label: 'Net Amount'
-  @UI.fieldGroup:     [ { qualifier: 'tqHeaderNetAmount', position: 10}, { qualifier: 'tqInv_Selection', position: 60}]
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderNetAmount', position: 10}, { qualifier: 'tqInvSelection', position: 60}]
   NetAmount;
 
   @EndUserText.label: 'Sellect Net Amount '
@@ -144,7 +145,7 @@ annotate entity ZC_ROC_INV_SET_H with
 
   @UI.lineItem: [ { position: 60} ]
   @EndUserText.label: 'Tax Amount'
-  @UI.fieldGroup:     [ { qualifier: 'tqHeaderTaxAmount', position: 10}, { qualifier: 'tqInv_Selection', position: 70}]
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderTaxAmount', position: 10}, { qualifier: 'tqInvSelection', position: 70}]
   TaxAmount;
 
   @EndUserText.label: 'Sellect Tax Amount '
@@ -160,7 +161,7 @@ annotate entity ZC_ROC_INV_SET_H with
   @UI.lineItem: [ { position: 15 } ]
   @UI.selectionField: [ { position: 20 } ]
   @EndUserText.label: 'Invoice Number'
-  @UI.fieldGroup:     [ { qualifier: 'tqInv_Selection', position: 10, groupLabel:'Invoice Selection'}]
+  @UI.fieldGroup:     [ { qualifier: 'tqInvSelection', position: 10, groupLabel:'Invoice Selection'}]
 
   @Consumption.valueHelpDefinition: [{
   entity: { name: 'ZI_ROC_INVOICE_VH', element: 'InvoiceNo' },
@@ -180,13 +181,14 @@ annotate entity ZC_ROC_INV_SET_H with
 
   @UI.lineItem: [ { position: 80 } ]
   @UI.selectionField: [ { position: 70 } ]
-  @UI.fieldGroup:     [ { qualifier: 'tqInv_Selection', position: 30}]
+  @UI.fieldGroup:     [ { qualifier: 'tqInvSelection', position: 30}]
   Lifnr;
 
   @UI.lineItem: [ { position: 90 } ]
   @UI.selectionField: [ { position: 90 } ]
+  @Consumption.filter.selectionType: #INTERVAL
   @EndUserText.label: 'Invoice Date'
-  @UI.fieldGroup:     [ { qualifier: 'tqInv_Selection', position: 40}]
+  @UI.fieldGroup:     [ { qualifier: 'tqInvSelection', position: 40}]
   InvoiceDate;
   //**********************Invoice Selection Field End******************************************
 
@@ -194,7 +196,7 @@ annotate entity ZC_ROC_INV_SET_H with
   //**********************Text Field End******************************************
 
   @UI.lineItem: [ { position: 17 } ]
-  @UI.fieldGroup:     [ { qualifier: 'tqSettle_Text', position: 20}]
+  @UI.fieldGroup:     [ { qualifier: 'tqSettleText', position: 20}]
   //  @Consumption.valueHelpDefinition: [{
   //   entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
   //   additionalBinding: [
@@ -207,17 +209,18 @@ annotate entity ZC_ROC_INV_SET_H with
   @UI.lineItem: [ { position: 100 } ]
   @UI.selectionField: [ { position: 90 } ]
   @EndUserText.label: 'Header Text'
-  @UI.fieldGroup:     [ { qualifier: 'tqSettle_Text', position: 30}]
+  @UI.fieldGroup:     [ { qualifier: 'tqSettleText', position: 30}]
   Bktxt;
 
   @UI.lineItem: [ { position: 110 } ]
   @EndUserText.label: 'Assignment Text'
-  @UI.fieldGroup:     [ { qualifier: 'tqSettle_Text', position: 40}]
+  @UI.fieldGroup:     [ { qualifier: 'tqSettleText', position: 40}]
   Sgtxt;
   //**********************Text Field End******************************************
 
 
-  //  Mwskz;
+
+  // Mwskz;
   //  TaxRate;
   //  Waers;
   //  DpNo;

@@ -10,7 +10,7 @@ CLASS lsc_zi_travel_roc_m IMPLEMENTATION.
 
   METHOD save_modified.
 **********************************************************************
-*Travel Additional Save
+*Travel Additional Save, save addtional log
 **********************************************************************
     DATA:
       lt_travel_log_tmp TYPE STANDARD TABLE OF zlg_travel_roc_m,

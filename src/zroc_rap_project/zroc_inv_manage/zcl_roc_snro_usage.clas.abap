@@ -38,7 +38,7 @@ CLASS zcl_roc_snro_usage IMPLEMENTATION.
         cl_numberrange_intervals=>create(
           EXPORTING
             object = 'ZROC_INV01'
-            interval = VALUE #( ( nrrangenr = '02'
+            interval = VALUE #( ( nrrangenr = '01'
                                   fromnumber = '100000000000'
                                   tonumber   = '199999999999'
                                   procind    = 'I' ) )   " I=内部

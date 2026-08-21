@@ -8,7 +8,7 @@ persistent table zroc_inv_set_h
 draft table zdroc_inv_set_h
 lock master total etag LastChangedAt
 etag master LastChangedAt
-authorization master ( instance )
+authorization master ( global, instance )
 early numbering
 {
   field ( readonly )
@@ -26,16 +26,19 @@ early numbering
 
   field ( mandatory ) InvoiceNo, Bukrs, Lifnr, SettleType, TransactionEvent;
 
-  create ( authorization : global  );
+  create;
   update;
   delete;
-  association _invItem { create ( features: instance ); with draft; }
+  association _invItem { create ( features : instance ); with draft; }
 
   draft action Activate optimized;
   draft action Discard;
   draft action Edit;
   draft action Resume;
-  draft determine action Prepare;
+  draft determine action Prepare
+  {
+    validation validateRequiredFields;
+  }
 
   //Create 按钮点击后加弹出框输入字段
   static default factory action ( authorization : global ) createWithParams
@@ -44,8 +47,14 @@ early numbering
   //发票号码变化时自动获取票面信息
   determination setInvoiceData on modify { field InvoiceNo; }
 
-  side effects { field InvoiceNo affects field( Lifnr, SellerName, Waers, Bktxt, grossamount, netamount, taxamount, invoicedate ); }
+  //发票号码变化时，UI界面值更新
+  side effects { field InvoiceNo affects field ( Lifnr, SellerName, Waers, Bktxt, grossamount, netamount, taxamount, invoicedate ); }
 
+  //GET GR ITEM自定义按钮
+  action ( features : instance ) getGRItem parameter ZD_ROC_GETGR_PARAMS result [1] $self;
+
+
+  validation validateRequiredFields on save { create; update; field InvoiceNo, Bukrs, Lifnr, TransactionEvent; }
 
   mapping for zroc_inv_set_h
     {
@@ -98,8 +107,6 @@ early numbering
   delete;
   field ( readonly ) SettleNo, ItemNo;
   association _invHeader { with draft; }
-
-  action  ( features: instance ) getGRItem result [1] $self;
 
   mapping for zroc_inv_set_i
     {

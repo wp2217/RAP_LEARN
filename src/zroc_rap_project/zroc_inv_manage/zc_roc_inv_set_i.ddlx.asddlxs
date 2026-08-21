@@ -17,8 +17,7 @@
 annotate entity ZC_ROC_INV_SET_I with
 {
   //SettleNo;
-
-  @UI.lineItem: [{ position: 10 }, { type: #FOR_ACTION, dataAction: 'getGRItem', label: 'Get GR Items' }]
+  @UI.lineItem: [{ position: 10 }]
   @UI.identification: [{  position: 10 }]
   ItemNo;
 

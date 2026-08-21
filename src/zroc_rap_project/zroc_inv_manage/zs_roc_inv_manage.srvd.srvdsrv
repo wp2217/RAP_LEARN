@@ -2,4 +2,5 @@
 define service ZS_ROC_INV_MANAGE {
   expose ZC_ROC_INV_SET_H;
   expose ZC_ROC_INV_SET_I;
+  expose ZC_ROC_INVOICE;
 }

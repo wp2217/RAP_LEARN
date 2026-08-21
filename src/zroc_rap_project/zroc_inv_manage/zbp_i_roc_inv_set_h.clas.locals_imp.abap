@@ -12,11 +12,19 @@ CLASS lhc_zi_roc_inv_set_h DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR ACTION zi_roc_inv_set_h~createwithparams.
     METHODS get_instance_features FOR INSTANCE FEATURES
       IMPORTING keys REQUEST requested_features FOR zi_roc_inv_set_h RESULT result.
+    METHODS validaterequiredfields FOR VALIDATE ON SAVE
+       keys FOR zi_roc_inv_set_h~validaterequiredfields.
+    METHODS getgritem FOR MODIFY
+       keys FOR ACTION zi_roc_inv_set_h~getgritem RESULT result.
+
     METHODS earlynumbering_cba_invitem FOR NUMBERING
       IMPORTING entities FOR CREATE zi_roc_inv_set_h\_invitem.
 
     METHODS earlynumbering_create FOR NUMBERING
       IMPORTING entities FOR CREATE zi_roc_inv_set_h.
+
+
+
 
 ENDCLASS.
 
@@ -29,50 +37,67 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD earlynumbering_create.
+    DATA:
+      lt_mapped    TYPE TABLE FOR MAPPED EARLY zi_roc_inv_set_h,
+      ls_mapped    LIKE LINE OF lt_mapped,
+      lt_to_number TYPE TABLE FOR CREATE zi_roc_inv_set_h.
 
-    DATA(lv_qty) = lines( entities ).
+    " 1) 过滤：框架可能已经给过号（重入时），或外部早期编号已带进来
+    lt_to_number = entities.
+    DELETE lt_to_number WHERE SettleNo IS NOT INITIAL.   " 必须有这行 [6](@ref)
+    IF lt_to_number IS INITIAL.
 
-    TRY.
-        cl_numberrange_runtime=>number_get(
-          EXPORTING
-            nr_range_nr       = '02'
-            object            = 'ZROC_INV01'
-            quantity          = CONV #( lv_qty )
-          IMPORTING
-            number            = DATA(lv_number)
-            returncode        = DATA(lv_returncode)
-            returned_quantity = DATA(lv_return_qty)
-        ).
-      CATCH cx_nr_object_not_found.
-      CATCH cx_number_ranges INTO DATA(lo_error).
+      LOOP AT entities INTO DATA(ls_entities).
+        ls_mapped-%cid = ls_entities-%cid.
+        ls_mapped-%is_draft = ls_entities-%is_draft.
+        ls_mapped-settleno = ls_entities-SettleNo.
+        APPEND ls_mapped TO mapped-zi_roc_inv_set_h.
+      ENDLOOP.
 
-        LOOP AT entities INTO DATA(ls_entities).
-          APPEND VALUE #( %cid = ls_entities-%cid %key = ls_entities-%key )
-            TO failed-zi_roc_inv_set_h.
-          APPEND VALUE #( %cid = ls_entities-%cid %key = ls_entities-%key %msg = lo_error )
-            TO reported-zi_roc_inv_set_h.
-        ENDLOOP.
-        EXIT.
+    ELSE.
 
-    ENDTRY.
+      DATA(lv_qty) = lines( lt_to_number ).
 
-    ASSERT lv_return_qty = lv_qty.
+      TRY.
+          cl_numberrange_runtime=>number_get(
+            EXPORTING
+              nr_range_nr       = '01'
+              object            = 'ZROC_INV01'
+              quantity          = CONV #( lv_qty )
+            IMPORTING
+              number            = DATA(lv_number)
+              returncode        = DATA(lv_returncode)
+              returned_quantity = DATA(lv_return_qty)
+          ).
+        CATCH cx_nr_object_not_found.
+        CATCH cx_number_ranges INTO DATA(lo_error).
 
-    "当前号码
-    lv_number = lv_number - lv_qty.
+          LOOP AT lt_to_number INTO ls_entities.
+            APPEND VALUE #( %cid = ls_entities-%cid %key = ls_entities-%key )
+              TO failed-zi_roc_inv_set_h.
+            APPEND VALUE #( %cid = ls_entities-%cid %key = ls_entities-%key %msg = lo_error )
+              TO reported-zi_roc_inv_set_h.
+          ENDLOOP.
+          EXIT.
 
-    DATA: lt_mapped TYPE TABLE FOR MAPPED EARLY zi_roc_inv_set_h,
-          ls_mapped LIKE LINE OF lt_mapped.
+      ENDTRY.
 
-    LOOP AT entities INTO ls_entities.
-      ls_mapped-%cid = ls_entities-%cid.
-      ls_mapped-%is_draft = ls_entities-%is_draft.
+      ASSERT lv_return_qty = lv_qty.
 
-      ls_mapped-settleno = lv_number+8(12).
-      lv_number += 1.
+      "当前号码
+      lv_number = lv_number - lv_qty.
 
-      APPEND ls_mapped TO mapped-zi_roc_inv_set_h.
-    ENDLOOP.
+      LOOP AT lt_to_number INTO ls_entities.
+        ls_mapped-%cid = ls_entities-%cid.
+        ls_mapped-%is_draft = ls_entities-%is_draft.
+
+        ls_mapped-settleno = lv_number+8(12).
+        lv_number += 1.
+
+        APPEND ls_mapped TO mapped-zi_roc_inv_set_h.
+      ENDLOOP.
+
+    ENDIF.
 
   ENDMETHOD.
 
@@ -190,24 +215,100 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
     " 读父实体状态（单据头状态）
     READ ENTITIES OF zi_roc_inv_set_h IN LOCAL MODE
       ENTITY zi_roc_inv_set_h
-      FIELDS ( settletype )
+      "FIELDS ( settletype )
+      ALL FIELDS
       WITH CORRESPONDING #( keys )
       RESULT DATA(lt_set_h)
       FAILED failed.
 
     LOOP AT lt_set_h INTO DATA(ls_set_h).
 
-      "基于PO的不允许手动创建行项目
+      "基于PO的且是草稿状态，且必输入项全填 抬头GET GR Item按钮才可用
+      DATA(lv_getgritem_enabled) =
+        COND #( WHEN ls_set_h-settletype = '01' AND ls_set_h-%is_draft = if_abap_behv=>mk-on
+                 AND ls_set_h-InvoiceNo IS NOT INITIAL AND ls_set_h-Lifnr IS NOT INITIAL AND ls_set_h-TransactionEvent IS NOT INITIAL
+                THEN if_abap_behv=>fc-o-enabled
+                ELSE if_abap_behv=>fc-o-disabled ).
+
+
+      "无PO的且是草稿状态，行项目create按钮才可用
       DATA(lv_item_enabled) =
-        COND #( WHEN ls_set_h-settletype = '01'
-                THEN if_abap_behv=>fc-o-disabled
-                ELSE if_abap_behv=>fc-o-enabled ).
+        COND #( WHEN ls_set_h-settletype = '02' AND ls_set_h-%is_draft = if_abap_behv=>mk-on
+                THEN if_abap_behv=>fc-o-enabled
+                ELSE if_abap_behv=>fc-o-disabled ).
 
       APPEND VALUE #(
         %tky        = ls_set_h-%tky
         %assoc-_invitem = lv_item_enabled
+        %action-getgritem = lv_getgritem_enabled
       ) TO result.
+
     ENDLOOP.
+
+  ENDMETHOD.
+
+
+  METHOD validateRequiredFields.
+
+    READ ENTITIES OF zi_roc_inv_set_h IN LOCAL MODE
+        ENTITY zi_roc_inv_set_h
+        ALL FIELDS
+        "FIELDS ( InvoiceNo )
+        WITH CORRESPONDING #( keys )
+        RESULT DATA(lt_set_h).
+
+    LOOP AT lt_set_h ASSIGNING FIELD-SYMBOL(<fs_sel_h>).
+      IF <fs_sel_h>-InvoiceNo IS INITIAL OR <fs_sel_h>-Lifnr IS INITIAL OR <fs_sel_h>-TransactionEvent IS INITIAL.
+
+        APPEND VALUE #( %tky = <fs_sel_h>-%tky ) TO failed-zi_roc_inv_set_h.
+        APPEND VALUE #( %tky              = <fs_sel_h>-%tky
+                        %msg              = new_message(
+                      id       = '00'
+                      number   = '001'
+                      severity = if_abap_behv_message=>severity-error
+                      v1       = '请录入必填项'
+                      v2       = space
+                      v3       = space
+                      v4       = space
+                      )
+
+        ) TO reported-zi_roc_inv_set_h.
+
+      ENDIF.
+    ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD getGRItem.
+    "Action 方法是在用户确认参数弹出框以后才会被调用
+
+    CHECK keys IS NOT INITIAL.
+
+    LOOP AT keys ASSIGNING FIELD-SYMBOL(<fs_keys>).
+      IF <fs_keys>-%param IS INITIAL.
+
+        APPEND VALUE #( %tky = <fs_keys>-%tky ) TO failed-zi_roc_inv_set_h.
+
+        APPEND VALUE #( %tky              = <fs_keys>-%tky
+                        %msg              = new_message(
+                      id       = '00'
+                      number   = '001'
+                      severity = if_abap_behv_message=>severity-error
+                      v1       = '至少录入一个查询条件'
+                      v2       = space
+                      v3       = space
+                      v4       = space
+                      )
+
+        ) TO reported-zi_roc_inv_set_h.
+
+        RETURN.
+
+      ENDIF.
+
+    ENDLOOP.
+
+    CHECK failed IS INITIAL.
 
   ENDMETHOD.
 

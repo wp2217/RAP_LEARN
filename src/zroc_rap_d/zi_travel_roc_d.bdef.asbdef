@@ -18,7 +18,7 @@ authorization master ( global, instance )
 
   association _Booking { create ( authorization : update ); with draft; } // 创建booking时调用instance update的权限检查
 
-  action ( authorization : update ) acceptTravel result [1] $self;
+  action ( authorization : update ) acceptTravel result [1] $self;  //权限检查复用标准global中的Update权限
   action ( authorization : update ) rejectTravel result [1] $self;
   action ( authorization : update ) deductDiscount parameter ZA_DEDUCT_DISCOUNT_ROC_D result [1] $self;
 

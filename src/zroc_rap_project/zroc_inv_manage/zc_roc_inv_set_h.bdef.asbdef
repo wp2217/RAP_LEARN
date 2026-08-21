@@ -18,8 +18,9 @@ define behavior for ZC_ROC_INV_SET_H //alias <alias_name>
   use action Discard;
   use action Prepare;
 
-
+  //自定义按钮事件
   use action createWithParams;
+  use action getGRItem;
 }
 
 define behavior for ZC_ROC_INV_SET_I //alias <alias_name>
@@ -28,4 +29,6 @@ define behavior for ZC_ROC_INV_SET_I //alias <alias_name>
   use delete;
 
   use association _invHeader { with draft; }
+
+
 }
