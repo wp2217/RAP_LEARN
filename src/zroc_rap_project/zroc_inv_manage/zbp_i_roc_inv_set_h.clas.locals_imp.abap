@@ -102,6 +102,67 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD earlynumbering_cba_invitem.
+
+    DATA: lv_max_item_id TYPE zroc_inv_set_i-item_no.
+
+    READ ENTITIES OF zi_roc_inv_set_h IN LOCAL MODE
+      ENTITY zi_roc_inv_set_h BY \_invItem
+      FROM CORRESPONDING #( entities )
+      RESULT DATA(lt_item_result)
+      LINK DATA(lt_item_link).
+
+    LOOP AT entities ASSIGNING FIELD-SYMBOL(<ls_entiies_group>)
+      GROUP BY <ls_entiies_group>-SettleNo.
+
+      "lt_item_link中会存已经创建的item id
+      lv_max_item_id = REDUCE #( INIT lv_max = CONV zroc_inv_set_i-item_no( 0 )
+                                    FOR ls_link IN lt_item_link USING KEY entity
+                                    WHERE ( source-SettleNo = <ls_entiies_group>-SettleNo )
+                                    NEXT lv_max = COND zroc_inv_set_i-item_no( WHEN lv_max < ls_link-target-ItemNo
+                                                                        THEN ls_link-target-ItemNo
+                                                                        ELSE lv_max ) ).
+      "entities中的%target只存最新的无item id的item数据
+      lv_max_item_id = REDUCE #( INIT lv_max = lv_max_item_id
+                                    FOR ls_entity IN entities USING KEY entity
+                                    WHERE ( SettleNo = <ls_entiies_group>-SettleNo )
+                                      FOR ls_item IN ls_entity-%target
+                                    NEXT lv_max = COND zroc_inv_set_i-item_no( WHEN lv_max < ls_item-ItemNo
+                                                                        THEN ls_item-ItemNo
+                                                                        ELSE lv_max ) ).
+
+      "为空的item id赋值
+      LOOP AT entities ASSIGNING FIELD-SYMBOL(<ls_entity>) USING KEY entity
+       WHERE SettleNo = <ls_entiies_group>-SettleNo.
+
+        LOOP AT <ls_entity>-%target ASSIGNING FIELD-SYMBOL(<ls_item>).
+          IF <ls_item>-ItemNo IS INITIAL.
+
+            "生成编号
+            lv_max_item_id += 10.
+
+            APPEND VALUE #(
+              %cid    = <ls_item>-%cid
+              %is_draft = <ls_item>-%is_draft
+              settleno = <ls_item>-SettleNo
+              ItemNo  = lv_max_item_id
+            ) TO mapped-zi_roc_inv_set_i.
+
+          ELSE.
+
+            "已有编号，同样必须返回
+            APPEND VALUE #(
+              %cid    = <ls_item>-%cid
+              %is_draft = <ls_item>-%is_draft
+               settleno = <ls_item>-SettleNo
+              ItemNo  = <ls_item>-ItemNo
+            ) TO mapped-zi_roc_inv_set_i.
+
+          ENDIF.
+        ENDLOOP.
+      ENDLOOP.
+
+    ENDLOOP.
+
   ENDMETHOD.
 
   METHOD setinvoicedata.
