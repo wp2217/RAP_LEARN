@@ -52,6 +52,9 @@ early numbering
   //GET GR ITEM自定义按钮
   action ( features : instance ) getGRItem parameter ZD_ROC_GETGR_PARAMS result [1] $self;
 
+  //Submit 按钮
+  action ( features : instance ) doSubmit result [1] $self;
+
 
   validation validateRequiredFields on save { create; update; field InvoiceNo, Bukrs, Lifnr, TransactionEvent; }
 

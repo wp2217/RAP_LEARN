@@ -16,6 +16,8 @@ CLASS lhc_zi_roc_inv_set_h DEFINITION INHERITING FROM cl_abap_behavior_handler.
        keys FOR zi_roc_inv_set_h~validaterequiredfields.
     METHODS getgritem FOR MODIFY
        keys FOR ACTION zi_roc_inv_set_h~getgritem RESULT result.
+    METHODS dosubmit FOR MODIFY
+      keys FOR ACTION zi_roc_inv_set_h~dosubmit RESULT result.
 
     METHODS earlynumbering_cba_invitem FOR NUMBERING
       IMPORTING entities FOR CREATE zi_roc_inv_set_h\_invitem.
@@ -369,6 +371,11 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
     ENDLOOP.
 
     CHECK failed IS INITIAL.
+  ENDMETHOD.
+
+  METHOD doSubmit.
+
+
   ENDMETHOD.
 
 ENDCLASS.

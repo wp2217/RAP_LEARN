@@ -21,6 +21,7 @@ define behavior for ZC_ROC_INV_SET_H //alias <alias_name>
   //自定义按钮事件
   use action createWithParams;
   use action getGRItem;
+  use action doSubmit;
 
 }
 

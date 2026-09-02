@@ -37,6 +37,12 @@ annotate entity ZC_ROC_INV_SET_H with
               targetQualifier: 'tqHeaderTaxAmount',
               position: 30 },
 
+             {  id: 'HeaderGrossAmount',
+              purpose: #HEADER,
+              type: #FIELDGROUP_REFERENCE,
+              targetQualifier: 'tqHeaderGrossAmount',
+              position: 40 },
+
   //*****************Header End*********************************************
 
   //*****************Tab Begin*********************************************
@@ -78,7 +84,8 @@ annotate entity ZC_ROC_INV_SET_H with
 
   //**********************Header Field Begin******************************************
   @UI.lineItem: [ { position: 10 } ]
-  @UI.identification: [ { position: 10 }, { type: #FOR_ACTION, dataAction: 'getGRItem', label: 'Get GR Items' } ]
+  @UI.identification: [ { position: 10 }, { type: #FOR_ACTION, position: 10,  dataAction: 'getGRItem', label: 'Get GR Items' }, 
+                                          { type: #FOR_ACTION, position: 20,  dataAction: 'doSubmit',  label: 'Submit' } ]
   @UI.selectionField: [ { position: 10 } ]
   @Search.defaultSearchElement: true
   @EndUserText.label: 'Settlement No.'
@@ -111,24 +118,6 @@ annotate entity ZC_ROC_INV_SET_H with
   }]
   SettleType;
 
-  @UI.lineItem: [ { position: 20 } ]
-  @UI.selectionField: [ { position: 40 } ]
-  @UI.fieldGroup:     [ { qualifier: 'tqHeaderInfo',position: 40} ]
-  @Consumption.valueHelpDefinition: [{
-  entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
-  additionalBinding: [
-    { localConstant: 'ZDROC_SETTLE_STATUS', element: 'DomainName', usage: #FILTER }],
-  distinctValues: true
-  }]
-  SettleStatus;
-
-
-  @UI.lineItem: [ { position: 40 } ]
-  @UI.selectionField: [ { position: 100 } ]
-  @EndUserText.label: 'Gross Amount'
-  @UI.fieldGroup:     [ { qualifier: 'tqHeaderInfo', position: 50}, { qualifier: 'tqInvSelection', position: 50}]
-  GrossAmount;
-
   @UI.lineItem: [ { position: 50 } ]
   @EndUserText.label: 'Net Amount'
   @UI.fieldGroup:     [ { qualifier: 'tqHeaderNetAmount', position: 10}, { qualifier: 'tqInvSelection', position: 60}]
@@ -155,6 +144,25 @@ annotate entity ZC_ROC_INV_SET_H with
   @EndUserText.label: 'Differ Tax Amount '
   @UI.fieldGroup:     [ { qualifier: 'tqHeaderTaxAmount', position: 30}]
   DiffTaxAmount;
+
+
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.selectionField: [ { position: 40 } ]
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderGrossAmount',position: 10} ]
+  @Consumption.valueHelpDefinition: [{
+  entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
+  additionalBinding: [
+    { localConstant: 'ZDROC_SETTLE_STATUS', element: 'DomainName', usage: #FILTER }],
+  distinctValues: true
+  }]
+  SettleStatus;
+
+
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.selectionField: [ { position: 100 } ]
+  @EndUserText.label: 'Gross Amount'
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderGrossAmount', position: 20}, { qualifier: 'tqInvSelection', position: 50}]
+  GrossAmount;
   //**********************Header Field End******************************************
 
   //**********************Invoice Selection Field Begin******************************************
@@ -167,14 +175,14 @@ annotate entity ZC_ROC_INV_SET_H with
   entity: { name: 'ZI_ROC_INVOICE_VH', element: 'InvoiceNo' },
   additionalBinding: [
     { localElement: 'Bukrs',    element: 'Bukrs',    usage: #FILTER }
-//    { localElement: 'SellerName',  element: 'SellerName',   usage: #RESULT },
-//    { localElement: 'BuyerName', element: 'BuyerName', usage: #RESULT },
-//    { localElement: 'InvoiceDate', element: 'InvoiceDate', usage: #RESULT },
-//    { localElement: 'NetAmount', element: 'NetAmount', usage: #RESULT },
-//    { localElement: 'GrossAmount', element: 'GrossAmount', usage: #RESULT },
-//    { localElement: 'TaxAmount', element: 'TaxAmount', usage: #RESULT },
-//    { localElement: 'Waers', element: 'Waers', usage: #RESULT },
-//    { localElement: 'Bktxt', element: 'Remark', usage: #RESULT }
+  //    { localElement: 'SellerName',  element: 'SellerName',   usage: #RESULT },
+  //    { localElement: 'BuyerName', element: 'BuyerName', usage: #RESULT },
+  //    { localElement: 'InvoiceDate', element: 'InvoiceDate', usage: #RESULT },
+  //    { localElement: 'NetAmount', element: 'NetAmount', usage: #RESULT },
+  //    { localElement: 'GrossAmount', element: 'GrossAmount', usage: #RESULT },
+  //    { localElement: 'TaxAmount', element: 'TaxAmount', usage: #RESULT },
+  //    { localElement: 'Waers', element: 'Waers', usage: #RESULT },
+  //    { localElement: 'Bktxt', element: 'Remark', usage: #RESULT }
   ] }]
   @Search.defaultSearchElement: true
   InvoiceNo;
