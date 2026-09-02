@@ -16,7 +16,7 @@ define root view entity ZI_ROC_INV_SET_H
       settle_status       as SettleStatus,
       transaction_event   as TransactionEvent,
       invoice_no          as InvoiceNo,
-      invoice_type        as InvoiceType, 
+      invoice_type        as InvoiceType,
       invoice_date        as InvoiceDate,
       bukrs               as Bukrs,
       buyer_name          as BuyerName,

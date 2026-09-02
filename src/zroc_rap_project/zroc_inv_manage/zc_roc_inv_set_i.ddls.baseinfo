@@ -3,6 +3,7 @@
 {
 "FROM":
 [
+"ZI_ROC_INV_SET_H",
 "ZI_ROC_INV_SET_I"
 ],
 "ASSOCIATED":

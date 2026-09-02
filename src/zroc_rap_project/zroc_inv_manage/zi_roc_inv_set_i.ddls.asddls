@@ -54,6 +54,5 @@ define view entity ZI_ROC_INV_SET_I
       tax_rate_npo            as TaxRateNpo,
       @Semantics.amount.currencyCode: 'Currency'
       tax_amount_npo          as TaxAmountNpo,
-
       _invHeader
 }

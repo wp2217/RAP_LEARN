@@ -50,7 +50,7 @@ annotate entity ZC_ROC_INV_SET_H with
               purpose: #STANDARD,
               type: #LINEITEM_REFERENCE,   //子节点按行项目显示， 结合子节点metadata中@UI.lineItem: [{  position: 80}]显示字段（定义在下个页面，显示在下一个页面）
               position: 20,
-              label: 'GR Items',          //Tab页签
+              label: 'Items',          //Tab页签
               targetElement: '_invItem'  },
 
   //*****************Tab End*********************************************

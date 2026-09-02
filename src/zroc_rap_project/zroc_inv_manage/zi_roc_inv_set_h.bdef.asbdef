@@ -46,7 +46,6 @@ early numbering
 
   //发票号码变化时自动获取票面信息
   determination setInvoiceData on modify { field InvoiceNo; }
-
   //发票号码变化时，UI界面值更新
   side effects { field InvoiceNo affects field ( Lifnr, SellerName, Waers, Bktxt, grossamount, netamount, taxamount, invoicedate ); }
 

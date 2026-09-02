@@ -16,86 +16,132 @@
 }
 annotate entity ZC_ROC_INV_SET_I with
 {
+  @UI.facet: [{      id: 'SettleItem',
+                     purpose: #STANDARD,
+                     type: #IDENTIFICATION_REFERENCE,
+                     position: 10,
+                     label: 'Settlement Item'  }
+                     ]
   //SettleNo;
   @UI.lineItem: [{ position: 10 }]
   @UI.identification: [{  position: 10 }]
+  @EndUserText.label: 'Item'
   ItemNo;
 
   @UI.lineItem: [{ position: 15 }]
   @UI.identification: [{  position: 15 }]
+  @UI.hidden: true
+  @EndUserText.label: 'Origin Invoice No.'
   InvoiceNo;
 
+  //**************************************  PO Fields **************************************************************
   @UI.lineItem: [{ position: 20 }]
   @UI.identification: [{  position: 20 }]
+  @UI.hidden: #(HidePOFields)
+  @EndUserText.label: 'PO'
   PurchaseOrder;
 
   @UI.lineItem: [{ position: 30 }]
   @UI.identification: [{  position: 30 }]
+  @UI.hidden: #(HidePOFields)
+  @EndUserText.label: 'PO Item'
   PurchaseOrderItem;
 
 
   @UI.lineItem: [{ position: 40 }]
   @UI.identification: [{  position: 40 }]
+  @EndUserText.label: 'Material'
+  @UI.hidden: #(HidePOFields)
   Material;
 
   @UI.lineItem: [{ position: 50 }]
   @UI.identification: [{  position: 50 }]
+  @EndUserText.label: 'Text'
+  @UI.hidden: #(HidePOFields)
   ShortText;
 
   @UI.lineItem: [{ position: 60 }]
   @UI.identification: [{  position: 60 }]
+  @EndUserText.label: 'Quantity'
+  @UI.hidden: #(HidePOFields)
   Quantity;
 
   @UI.lineItem: [{ position: 70 }]
   @UI.identification: [{  position: 70 }]
+  @EndUserText.label: 'Unit'
+  @UI.hidden: #(HidePOFields)
   OrderUnit;
 
   @UI.lineItem: [{ position: 80 }]
   @UI.identification: [{  position: 80 }]
+  @EndUserText.label: 'Net Price'
+  @UI.hidden: #(HidePOFields)
   NetPrice;
 
   @UI.lineItem: [{ position: 90 }]
   @UI.identification: [{  position: 90 }]
+  @EndUserText.label: 'Price Unit'
+  @UI.hidden: #(HidePOFields)
   PriceUnit;
 
   @UI.lineItem: [{ position: 100 }]
   @UI.identification: [{  position: 100 }]
+  @EndUserText.label: 'Net Amount'
+  @UI.hidden: #(HidePOFields)
   DocumentAmount;
 
   @UI.lineItem: [{ position: 110 }]
   @UI.identification: [{  position: 110 }]
+  @EndUserText.label: 'Planned Delivery Amount'
+  @UI.hidden: #(HidePOFields)
   PlannedDeliveryAmount;
 
   @UI.lineItem: [{ position: 120 }]
   @UI.identification: [{  position: 120 }]
+  @EndUserText.label: 'Tax Code'
+  @UI.hidden: #(HidePOFields)
   TaxCode;
 
   @UI.lineItem: [{ position: 130 }]
   @UI.identification: [{  position: 130 }]
+  @EndUserText.label: 'Tax Rate'
+  @UI.hidden: #(HidePOFields)
   TaxRate;
 
   @UI.lineItem: [{ position: 140 }]
   @UI.identification: [{  position: 140 }]
+  @EndUserText.label: 'Tax Amount'
+  @UI.hidden: #(HidePOFields)
   TaxAmount;
 
   @UI.lineItem: [{ position: 150 }]
   @UI.identification: [{  position: 150 }]
+  @EndUserText.label: 'Material Document'
+  @UI.hidden: #(HidePOFields)
   MaterialDocument;
 
   @UI.lineItem: [{ position: 160 }]
   @UI.identification: [{  position: 160 }]
+  @EndUserText.label: 'Material Doc Year'
+  @UI.hidden: #(HidePOFields)
   MaterialDocYear;
 
   @UI.lineItem: [{ position: 170 }]
   @UI.identification: [{  position: 170 }]
+  @EndUserText.label: 'Material Doc Item'
+  @UI.hidden: #(HidePOFields)
   MaterialDocItem;
 
   @UI.lineItem: [{ position: 180 }]
   @UI.identification: [{  position: 180 }]
+  @EndUserText.label: 'Reference Document'
+  @UI.hidden: #(HidePOFields)
   ReferenceDocument;
 
   @UI.lineItem: [{ position: 190 }]
   @UI.identification: [{  position: 190 }]
+  @EndUserText.label: 'Condition Type'
+  @UI.hidden: #(HidePOFields)
   ConditionType;
 
   //ExternalDelivery;
@@ -112,16 +158,64 @@ annotate entity ZC_ROC_INV_SET_I with
   //
   //  EntryDate;
   //  EntryTime;
+
+
   //  DebitCredit;
-  //  GlAccountNpo;
-  //  CostCenterNpo;
-  //  AssignmentNpo;
-  //  ItemTextNpo;
-  //  DebitCreditNpo;
-  //  AmountNpo;
-  //  TaxCodeNpo;
-  //  TaxRateNpo;
-  //  TaxAmountNpo;
+
+  //**************************************  NonPO Fields **************************************************************
+  @UI.lineItem: [{ position: 510 }]
+  @UI.identification: [{  position: 510 }]
+  @EndUserText.label: 'GL Account'
+  @UI.hidden: #(HideNPOFields)
+  GlAccountNpo;
+
+  @UI.lineItem: [{ position: 520 }]
+  @UI.identification: [{  position: 520 }]
+  @EndUserText.label: 'Cost Center'
+  @UI.hidden: #(HideNPOFields)
+  CostCenterNpo;
+
+  @UI.lineItem: [{ position: 530 }]
+  @UI.identification: [{  position: 530 }]
+  @EndUserText.label: 'Assignment'
+  @UI.hidden: #(HideNPOFields)
+  AssignmentNpo;
+
+  @UI.lineItem: [{ position: 540 }]
+  @UI.identification: [{  position: 540 }]
+  @EndUserText.label: 'Text'
+  @UI.hidden: #(HideNPOFields)
+  ItemTextNpo;
+
+  @UI.lineItem: [{ position: 550 }]
+  @UI.identification: [{  position: 550 }]
+  @EndUserText.label: 'Debit/Credit'
+  @UI.hidden: #(HideNPOFields)
+  DebitCreditNpo;
+
+  @UI.lineItem: [{ position: 560 }]
+  @UI.identification: [{  position: 560 }]
+  @EndUserText.label: 'Net Amount'
+  @UI.hidden: #(HideNPOFields)
+  AmountNpo;
+
+  @UI.lineItem: [{ position: 570 }]
+  @UI.identification: [{  position: 570 }]
+  @EndUserText.label: 'Tax Code'
+  @UI.hidden: #(HideNPOFields)
+  TaxCodeNpo;
+
+  @UI.lineItem: [{ position: 580 }]
+  @UI.identification: [{  position: 580 }]
+  @EndUserText.label: 'Tax Rate'
+  @UI.hidden: #(HideNPOFields)
+  TaxRateNpo;
+
+  @UI.lineItem: [{ position: 590 }]
+  @UI.identification: [{  position: 590 }]
+  @EndUserText.label: 'Tax Amount'
+  @UI.hidden: #(HideNPOFields)
+  TaxAmountNpo;
   /* Associations */
   //_invHeader;
 

@@ -342,7 +342,6 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
 
   METHOD getGRItem.
     "Action 方法是在用户确认参数弹出框以后才会被调用
-
     CHECK keys IS NOT INITIAL.
 
     LOOP AT keys ASSIGNING FIELD-SYMBOL(<fs_keys>).
@@ -370,7 +369,6 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
     ENDLOOP.
 
     CHECK failed IS INITIAL.
-
   ENDMETHOD.
 
 ENDCLASS.
