@@ -27,13 +27,13 @@ early numbering
   field ( mandatory ) InvoiceNo, Bukrs, Lifnr, SettleType, TransactionEvent;
 
   create;
-  update;
-  delete;
+  update ( features : instance );
+  delete ( features : instance );
   association _invItem { create ( features : instance ); with draft; }
 
   draft action Activate optimized;
   draft action Discard;
-  draft action Edit;
+  draft action ( features : instance ) Edit ;
   draft action Resume;
   draft determine action Prepare
   {

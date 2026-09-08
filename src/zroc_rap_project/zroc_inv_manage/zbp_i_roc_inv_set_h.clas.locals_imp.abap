@@ -6,18 +6,24 @@ CLASS lhc_zi_roc_inv_set_h DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
       IMPORTING REQUEST requested_authorizations FOR zi_roc_inv_set_h RESULT result.
+
     METHODS setinvoicedata FOR DETERMINE ON MODIFY
       IMPORTING keys FOR zi_roc_inv_set_h~setinvoicedata.
+
     METHODS createwithparams FOR MODIFY
       IMPORTING keys FOR ACTION zi_roc_inv_set_h~createwithparams.
+
     METHODS get_instance_features FOR INSTANCE FEATURES
       IMPORTING keys REQUEST requested_features FOR zi_roc_inv_set_h RESULT result.
+
     METHODS validaterequiredfields FOR VALIDATE ON SAVE
        keys FOR zi_roc_inv_set_h~validaterequiredfields.
+
     METHODS getgritem FOR MODIFY
        keys FOR ACTION zi_roc_inv_set_h~getgritem RESULT result.
+
     METHODS dosubmit FOR MODIFY
-      keys FOR ACTION zi_roc_inv_set_h~dosubmit RESULT result.
+       keys FOR ACTION zi_roc_inv_set_h~dosubmit RESULT result.
 
     METHODS earlynumbering_cba_invitem FOR NUMBERING
       IMPORTING entities FOR CREATE zi_roc_inv_set_h\_invitem.
@@ -46,13 +52,13 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
 
     " 1) 过滤：框架可能已经给过号（重入时），或外部早期编号已带进来
     lt_to_number = entities.
-    DELETE lt_to_number WHERE SettleNo IS NOT INITIAL.   " 必须有这行 [6](@ref)
+    DELETE lt_to_number WHERE settleno IS NOT INITIAL.   " 必须有这行 [6](@ref)
     IF lt_to_number IS INITIAL.
 
       LOOP AT entities INTO DATA(ls_entities).
         ls_mapped-%cid = ls_entities-%cid.
         ls_mapped-%is_draft = ls_entities-%is_draft.
-        ls_mapped-settleno = ls_entities-SettleNo.
+        ls_mapped-settleno = ls_entities-settleno.
         APPEND ls_mapped TO mapped-zi_roc_inv_set_h.
       ENDLOOP.
 
@@ -108,36 +114,36 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
     DATA: lv_max_item_id TYPE zroc_inv_set_i-item_no.
 
     READ ENTITIES OF zi_roc_inv_set_h IN LOCAL MODE
-      ENTITY zi_roc_inv_set_h BY \_invItem
+      ENTITY zi_roc_inv_set_h BY \_invitem
       FROM CORRESPONDING #( entities )
       RESULT DATA(lt_item_result)
       LINK DATA(lt_item_link).
 
     LOOP AT entities ASSIGNING FIELD-SYMBOL(<ls_entiies_group>)
-      GROUP BY <ls_entiies_group>-SettleNo.
+      GROUP BY <ls_entiies_group>-settleno.
 
       "lt_item_link中会存已经创建的item id
       lv_max_item_id = REDUCE #( INIT lv_max = CONV zroc_inv_set_i-item_no( 0 )
                                     FOR ls_link IN lt_item_link USING KEY entity
-                                    WHERE ( source-SettleNo = <ls_entiies_group>-SettleNo )
-                                    NEXT lv_max = COND zroc_inv_set_i-item_no( WHEN lv_max < ls_link-target-ItemNo
-                                                                        THEN ls_link-target-ItemNo
+                                    WHERE ( source-settleno = <ls_entiies_group>-settleno )
+                                    NEXT lv_max = COND zroc_inv_set_i-item_no( WHEN lv_max < ls_link-target-itemno
+                                                                        THEN ls_link-target-itemno
                                                                         ELSE lv_max ) ).
       "entities中的%target只存最新的无item id的item数据
       lv_max_item_id = REDUCE #( INIT lv_max = lv_max_item_id
                                     FOR ls_entity IN entities USING KEY entity
-                                    WHERE ( SettleNo = <ls_entiies_group>-SettleNo )
+                                    WHERE ( settleno = <ls_entiies_group>-settleno )
                                       FOR ls_item IN ls_entity-%target
-                                    NEXT lv_max = COND zroc_inv_set_i-item_no( WHEN lv_max < ls_item-ItemNo
-                                                                        THEN ls_item-ItemNo
+                                    NEXT lv_max = COND zroc_inv_set_i-item_no( WHEN lv_max < ls_item-itemno
+                                                                        THEN ls_item-itemno
                                                                         ELSE lv_max ) ).
 
       "为空的item id赋值
       LOOP AT entities ASSIGNING FIELD-SYMBOL(<ls_entity>) USING KEY entity
-       WHERE SettleNo = <ls_entiies_group>-SettleNo.
+       WHERE settleno = <ls_entiies_group>-settleno.
 
         LOOP AT <ls_entity>-%target ASSIGNING FIELD-SYMBOL(<ls_item>).
-          IF <ls_item>-ItemNo IS INITIAL.
+          IF <ls_item>-itemno IS INITIAL.
 
             "生成编号
             lv_max_item_id += 10.
@@ -145,8 +151,8 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
             APPEND VALUE #(
               %cid    = <ls_item>-%cid
               %is_draft = <ls_item>-%is_draft
-              settleno = <ls_item>-SettleNo
-              ItemNo  = lv_max_item_id
+              settleno = <ls_item>-settleno
+              itemno  = lv_max_item_id
             ) TO mapped-zi_roc_inv_set_i.
 
           ELSE.
@@ -155,8 +161,8 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
             APPEND VALUE #(
               %cid    = <ls_item>-%cid
               %is_draft = <ls_item>-%is_draft
-               settleno = <ls_item>-SettleNo
-              ItemNo  = <ls_item>-ItemNo
+               settleno = <ls_item>-settleno
+              itemno  = <ls_item>-itemno
             ) TO mapped-zi_roc_inv_set_i.
 
           ENDIF.
@@ -284,12 +290,27 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
       RESULT DATA(lt_set_h)
       FAILED failed.
 
+    READ ENTITIES OF zi_roc_inv_set_h IN LOCAL MODE
+      ENTITY zi_roc_inv_set_h BY \_invitem        "直接读行项目读不到，要按这种方式才能读取
+      "FIELDS ( settletype )
+      ALL FIELDS
+      WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_set_i)
+      FAILED failed.
+
+
     LOOP AT lt_set_h INTO DATA(ls_set_h).
+
+      "标准编辑\删除按钮
+      DATA(lv_edit_del) =
+        COND #( WHEN ls_set_h-settlestatus = '01'
+                THEN if_abap_behv=>fc-o-enabled
+                ELSE if_abap_behv=>fc-o-disabled ).
 
       "基于PO的且是草稿状态，且必输入项全填 抬头GET GR Item按钮才可用
       DATA(lv_getgritem_enabled) =
         COND #( WHEN ls_set_h-settletype = '01' AND ls_set_h-%is_draft = if_abap_behv=>mk-on
-                 AND ls_set_h-InvoiceNo IS NOT INITIAL AND ls_set_h-Lifnr IS NOT INITIAL AND ls_set_h-TransactionEvent IS NOT INITIAL
+                 AND ls_set_h-invoiceno IS NOT INITIAL AND ls_set_h-lifnr IS NOT INITIAL AND ls_set_h-transactionevent IS NOT INITIAL
                 THEN if_abap_behv=>fc-o-enabled
                 ELSE if_abap_behv=>fc-o-disabled ).
 
@@ -300,10 +321,29 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
                 THEN if_abap_behv=>fc-o-enabled
                 ELSE if_abap_behv=>fc-o-disabled ).
 
+
+      "提交按钮是否可用：激活状态且行项目不为空
+      READ TABLE lt_set_i WITH KEY settleno = ls_set_h-settleno TRANSPORTING NO FIELDS BINARY SEARCH.
+      IF sy-subrc = 0.
+        DATA(lv_submit_enabled) =
+          COND #( WHEN ls_set_h-%is_draft = if_abap_behv=>mk-off and ls_set_h-settlestatus = '01'
+                   AND ls_set_h-invoiceno IS NOT INITIAL AND ls_set_h-lifnr IS NOT INITIAL AND ls_set_h-transactionevent IS NOT INITIAL
+                  THEN if_abap_behv=>fc-o-enabled
+                  ELSE if_abap_behv=>fc-o-disabled ).
+      ELSE.
+
+        lv_submit_enabled = if_abap_behv=>fc-o-disabled.
+      ENDIF.
+
       APPEND VALUE #(
-        %tky        = ls_set_h-%tky
-        %assoc-_invitem = lv_item_enabled
+        %tky              = ls_set_h-%tky
+        %update           = lv_edit_del
+        %delete           = lv_edit_del
+        %action-edit      = lv_edit_del
+
         %action-getgritem = lv_getgritem_enabled
+        %action-dosubmit  = lv_submit_enabled
+        %assoc-_invitem   = lv_item_enabled
       ) TO result.
 
     ENDLOOP.
@@ -311,7 +351,7 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD validateRequiredFields.
+  METHOD validaterequiredfields.
 
     READ ENTITIES OF zi_roc_inv_set_h IN LOCAL MODE
         ENTITY zi_roc_inv_set_h
@@ -321,7 +361,7 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
         RESULT DATA(lt_set_h).
 
     LOOP AT lt_set_h ASSIGNING FIELD-SYMBOL(<fs_sel_h>).
-      IF <fs_sel_h>-InvoiceNo IS INITIAL OR <fs_sel_h>-Lifnr IS INITIAL OR <fs_sel_h>-TransactionEvent IS INITIAL.
+      IF <fs_sel_h>-invoiceno IS INITIAL OR <fs_sel_h>-lifnr IS INITIAL OR <fs_sel_h>-transactionevent IS INITIAL.
 
         APPEND VALUE #( %tky = <fs_sel_h>-%tky ) TO failed-zi_roc_inv_set_h.
         APPEND VALUE #( %tky              = <fs_sel_h>-%tky
@@ -342,7 +382,7 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD getGRItem.
+  METHOD getgritem.
     "Action 方法是在用户确认参数弹出框以后才会被调用
     CHECK keys IS NOT INITIAL.
 
@@ -373,8 +413,24 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
     CHECK failed IS INITIAL.
   ENDMETHOD.
 
-  METHOD doSubmit.
+  METHOD dosubmit.
+    "数据检查
 
+    "更改单据状态
+    MODIFY ENTITIES OF zi_roc_inv_set_h IN LOCAL MODE
+         ENTITY zi_roc_inv_set_h
+         UPDATE FIELDS ( settlestatus )
+         WITH VALUE #( FOR ls_key IN keys ( %tky          = ls_key-%tky
+                                            settlestatus = '02' ) ).
+
+    READ ENTITIES OF zi_roc_inv_set_h IN LOCAL MODE
+      ENTITY zi_roc_inv_set_h
+      ALL FIELDS WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_result).
+
+    result = VALUE #( FOR ls_result IN lt_result ( %tky   = ls_result-%tky
+                                                   %param = ls_result
+                      ) ).
 
   ENDMETHOD.
 
