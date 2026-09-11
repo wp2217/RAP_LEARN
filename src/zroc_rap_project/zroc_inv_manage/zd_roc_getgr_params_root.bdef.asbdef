@@ -1,0 +1,7 @@
+abstract;
+strict ( 2 );
+with hierarchy;
+
+define behavior for ZD_ROC_GETGR_PARAMS_ROOT //alias <alias_name>
+{
+}

@@ -15,7 +15,7 @@ define abstract entity ZD_ROC_GETGR_PARAMS
   @EndUserText.label: 'Material Document Year'
   MatDocYear        : abap.char(4);
 
-  @EndUserText.label: 'Material Document'
+  @EndUserText.label: 'Material Document'  
   MatDoc            : abap.char(10);
 
   @EndUserText.label: 'Posting Date From'
@@ -23,4 +23,6 @@ define abstract entity ZD_ROC_GETGR_PARAMS
 
   @EndUserText.label: 'Posting Date To'
   DateTo            : abap.dats;
+
+  _root             : association to parent ZD_ROC_GETGR_PARAMS_ROOT;
 }

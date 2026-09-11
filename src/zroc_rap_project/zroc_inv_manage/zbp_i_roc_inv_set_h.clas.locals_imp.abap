@@ -19,11 +19,12 @@ CLASS lhc_zi_roc_inv_set_h DEFINITION INHERITING FROM cl_abap_behavior_handler.
     METHODS validaterequiredfields FOR VALIDATE ON SAVE
        keys FOR zi_roc_inv_set_h~validaterequiredfields.
 
-    METHODS getgritem FOR MODIFY
-       keys FOR ACTION zi_roc_inv_set_h~getgritem RESULT result.
-
     METHODS dosubmit FOR MODIFY
        keys FOR ACTION zi_roc_inv_set_h~dosubmit RESULT result.
+    METHODS precheck_dosubmit FOR PRECHECK
+       keys FOR ACTION zi_roc_inv_set_h~dosubmit.
+    METHODS getgritem FOR MODIFY
+      keys FOR ACTION zi_roc_inv_set_h~getgritem RESULT result.
 
     METHODS earlynumbering_cba_invitem FOR NUMBERING
       IMPORTING entities FOR CREATE zi_roc_inv_set_h\_invitem.
@@ -326,7 +327,7 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
       READ TABLE lt_set_i WITH KEY settleno = ls_set_h-settleno TRANSPORTING NO FIELDS BINARY SEARCH.
       IF sy-subrc = 0.
         DATA(lv_submit_enabled) =
-          COND #( WHEN ls_set_h-%is_draft = if_abap_behv=>mk-off and ls_set_h-settlestatus = '01'
+          COND #( WHEN ls_set_h-%is_draft = if_abap_behv=>mk-off AND ls_set_h-settlestatus = '01'
                    AND ls_set_h-invoiceno IS NOT INITIAL AND ls_set_h-lifnr IS NOT INITIAL AND ls_set_h-transactionevent IS NOT INITIAL
                   THEN if_abap_behv=>fc-o-enabled
                   ELSE if_abap_behv=>fc-o-disabled ).
@@ -382,37 +383,6 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD getgritem.
-    "Action 方法是在用户确认参数弹出框以后才会被调用
-    CHECK keys IS NOT INITIAL.
-
-    LOOP AT keys ASSIGNING FIELD-SYMBOL(<fs_keys>).
-      IF <fs_keys>-%param IS INITIAL.
-
-        APPEND VALUE #( %tky = <fs_keys>-%tky ) TO failed-zi_roc_inv_set_h.
-
-        APPEND VALUE #( %tky              = <fs_keys>-%tky
-                        %msg              = new_message(
-                      id       = '00'
-                      number   = '001'
-                      severity = if_abap_behv_message=>severity-error
-                      v1       = '至少录入一个查询条件'
-                      v2       = space
-                      v3       = space
-                      v4       = space
-                      )
-
-        ) TO reported-zi_roc_inv_set_h.
-
-        RETURN.
-
-      ENDIF.
-
-    ENDLOOP.
-
-    CHECK failed IS INITIAL.
-  ENDMETHOD.
-
   METHOD dosubmit.
     "数据检查
 
@@ -432,6 +402,40 @@ CLASS lhc_zi_roc_inv_set_h IMPLEMENTATION.
                                                    %param = ls_result
                       ) ).
 
+  ENDMETHOD.
+
+  METHOD precheck_dosubmit.
+
+*    READ ENTITIES OF zi_roc_inv_set_h IN LOCAL MODE
+*            ENTITY zi_roc_inv_set_h
+*            ALL FIELDS
+*            "FIELDS ( InvoiceNo )
+*            WITH CORRESPONDING #( keys )
+*            RESULT DATA(lt_set_h).
+*
+*    LOOP AT lt_set_h ASSIGNING FIELD-SYMBOL(<fs_sel_h>).
+*      "IF <fs_sel_h>-invoiceno IS INITIAL OR <fs_sel_h>-lifnr IS INITIAL OR <fs_sel_h>-transactionevent IS INITIAL.
+*
+*        APPEND VALUE #( %tky = <fs_sel_h>-%tky ) TO failed-zi_roc_inv_set_h.
+*        APPEND VALUE #( %tky              = <fs_sel_h>-%tky
+*                        %msg              = new_message(
+*                      id       = '00'
+*                      number   = '001'
+*                      severity = if_abap_behv_message=>severity-warning
+*                      v1       = '请录入必填项'
+*                      v2       = space
+*                      v3       = space
+*                      v4       = space
+*                      )
+*
+*        ) TO reported-zi_roc_inv_set_h.
+*
+*      "ENDIF.
+*    ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD getGRItem.
   ENDMETHOD.
 
 ENDCLASS.
