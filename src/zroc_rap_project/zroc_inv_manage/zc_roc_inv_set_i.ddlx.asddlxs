@@ -16,132 +16,122 @@
 }
 annotate entity ZC_ROC_INV_SET_I with
 {
-  @UI.facet: [{      id: 'SettleItem',
+  @UI.facet: [{      id: 'SettlePOItem',
                      purpose: #STANDARD,
                      type: #IDENTIFICATION_REFERENCE,
                      position: 10,
-                     label: 'Settlement Item'  }
+                     targetQualifier: 'PO',
+                     hidden: #(HidePOFields),
+                     label: 'Settlement PO Item'  },
+                     
+              {      id: 'SettleNPOItem',
+                     purpose: #STANDARD,
+                     type: #IDENTIFICATION_REFERENCE,
+                     position: 10,
+                     targetQualifier: 'NPO',
+                     hidden: #(HideNPOFields),
+                     label: 'Settlement Non PO Item'  }
                      ]
+                     
+                     
   //SettleNo;
-  @UI.lineItem: [{ position: 10 }]
-  @UI.identification: [{  position: 10 }]
+  @UI.lineItem: [{ position: 10, qualifier: 'PO' }, { position: 10, qualifier: 'NPO' }]
+  @UI.identification: [{ position: 10, qualifier: 'PO' }, { position: 10, qualifier: 'NPO' }]
   @EndUserText.label: 'Item'
   ItemNo;
 
-  @UI.lineItem: [{ position: 15 }]
-  @UI.identification: [{  position: 15 }]
-  @UI.hidden: true
-  @EndUserText.label: 'Origin Invoice No.'
-  InvoiceNo;
 
   //**************************************  PO Fields **************************************************************
-  @UI.lineItem: [{ position: 20 }]
-  @UI.identification: [{  position: 20 }]
-  @UI.hidden: #(HidePOFields)
+  @UI.lineItem: [{ position: 20,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 20, qualifier: 'PO' }]
+  //@UI.hidden: #(HidePOFields)
   @EndUserText.label: 'PO'
   PurchaseOrder;
 
-  @UI.lineItem: [{ position: 30 }]
-  @UI.identification: [{  position: 30 }]
-  @UI.hidden: #(HidePOFields)
+  @UI.lineItem: [{ position: 30, qualifier: 'PO'}]
+  @UI.identification: [{  position: 30, qualifier: 'PO' }]
   @EndUserText.label: 'PO Item'
   PurchaseOrderItem;
 
 
-  @UI.lineItem: [{ position: 40 }]
-  @UI.identification: [{  position: 40 }]
+  @UI.lineItem: [{ position: 40,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 40,  qualifier: 'PO' }]
   @EndUserText.label: 'Material'
-  @UI.hidden: #(HidePOFields)
   Material;
 
-  @UI.lineItem: [{ position: 50 }]
-  @UI.identification: [{  position: 50 }]
+  @UI.lineItem: [{ position: 50,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 50,  qualifier: 'PO' }]
   @EndUserText.label: 'Text'
-  @UI.hidden: #(HidePOFields)
   ShortText;
 
-  @UI.lineItem: [{ position: 60 }]
-  @UI.identification: [{  position: 60 }]
+  @UI.lineItem: [{ position: 60,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 60,  qualifier: 'PO' }]
   @EndUserText.label: 'Quantity'
-  @UI.hidden: #(HidePOFields)
   Quantity;
 
-  @UI.lineItem: [{ position: 70 }]
-  @UI.identification: [{  position: 70 }]
+  @UI.lineItem: [{ position: 70,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 70,  qualifier: 'PO' }]
   @EndUserText.label: 'Unit'
-  @UI.hidden: #(HidePOFields)
   OrderUnit;
 
-  @UI.lineItem: [{ position: 80 }]
-  @UI.identification: [{  position: 80 }]
+  @UI.lineItem: [{ position: 80,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 80,  qualifier: 'PO' }]
   @EndUserText.label: 'Net Price'
-  @UI.hidden: #(HidePOFields)
   NetPrice;
 
-  @UI.lineItem: [{ position: 90 }]
-  @UI.identification: [{  position: 90 }]
+  @UI.lineItem: [{ position: 90,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 90,  qualifier: 'PO' }]
   @EndUserText.label: 'Price Unit'
-  @UI.hidden: #(HidePOFields)
   PriceUnit;
 
-  @UI.lineItem: [{ position: 100 }]
-  @UI.identification: [{  position: 100 }]
+  @UI.lineItem: [{ position: 100,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 100,  qualifier: 'PO' }]
   @EndUserText.label: 'Net Amount'
-  @UI.hidden: #(HidePOFields)
   DocumentAmount;
 
-  @UI.lineItem: [{ position: 110 }]
-  @UI.identification: [{  position: 110 }]
+  @UI.lineItem: [{ position: 110,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 110,  qualifier: 'PO' }]
   @EndUserText.label: 'Planned Delivery Amount'
-  @UI.hidden: #(HidePOFields)
   PlannedDeliveryAmount;
 
-  @UI.lineItem: [{ position: 120 }]
-  @UI.identification: [{  position: 120 }]
+  @UI.lineItem: [{ position: 120,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 120,  qualifier: 'PO' }]
   @EndUserText.label: 'Tax Code'
-  @UI.hidden: #(HidePOFields)
   TaxCode;
 
-  @UI.lineItem: [{ position: 130 }]
-  @UI.identification: [{  position: 130 }]
+  @UI.lineItem: [{ position: 130,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 130,  qualifier: 'PO' }]
   @EndUserText.label: 'Tax Rate'
-  @UI.hidden: #(HidePOFields)
   TaxRate;
 
-  @UI.lineItem: [{ position: 140 }]
-  @UI.identification: [{  position: 140 }]
+  @UI.lineItem: [{ position: 140,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 140,  qualifier: 'PO' }]
   @EndUserText.label: 'Tax Amount'
-  @UI.hidden: #(HidePOFields)
   TaxAmount;
 
-  @UI.lineItem: [{ position: 150 }]
-  @UI.identification: [{  position: 150 }]
+  @UI.lineItem: [{ position: 150,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 150,  qualifier: 'PO' }]
   @EndUserText.label: 'Material Document'
-  @UI.hidden: #(HidePOFields)
   MaterialDocument;
 
-  @UI.lineItem: [{ position: 160 }]
-  @UI.identification: [{  position: 160 }]
+  @UI.lineItem: [{ position: 160,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 160,  qualifier: 'PO' }]
   @EndUserText.label: 'Material Doc Year'
-  @UI.hidden: #(HidePOFields)
   MaterialDocYear;
 
-  @UI.lineItem: [{ position: 170 }]
-  @UI.identification: [{  position: 170 }]
+  @UI.lineItem: [{ position: 170,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 170,  qualifier: 'PO' }]
   @EndUserText.label: 'Material Doc Item'
-  @UI.hidden: #(HidePOFields)
   MaterialDocItem;
 
-  @UI.lineItem: [{ position: 180 }]
-  @UI.identification: [{  position: 180 }]
+  @UI.lineItem: [{ position: 180,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 180,  qualifier: 'PO' }]
   @EndUserText.label: 'Reference Document'
-  @UI.hidden: #(HidePOFields)
   ReferenceDocument;
 
-  @UI.lineItem: [{ position: 190 }]
-  @UI.identification: [{  position: 190 }]
+  @UI.lineItem: [{ position: 190,  qualifier: 'PO' }]
+  @UI.identification: [{  position: 190,  qualifier: 'PO' }]
   @EndUserText.label: 'Condition Type'
-  @UI.hidden: #(HidePOFields)
   ConditionType;
 
   //ExternalDelivery;
@@ -163,58 +153,49 @@ annotate entity ZC_ROC_INV_SET_I with
   //  DebitCredit;
 
   //**************************************  NonPO Fields **************************************************************
-  @UI.lineItem: [{ position: 510 }]
-  @UI.identification: [{  position: 510 }]
+  @UI.lineItem: [{ position: 510, qualifier: 'NPO' }]
+  @UI.identification: [{  position: 510, qualifier: 'NPO'  }]
   @EndUserText.label: 'GL Account'
-  @UI.hidden: #(HideNPOFields)
   GlAccountNpo;
 
-  @UI.lineItem: [{ position: 520 }]
-  @UI.identification: [{  position: 520 }]
+  @UI.lineItem: [{ position: 520, qualifier: 'NPO'  }]
+  @UI.identification: [{  position: 520, qualifier: 'NPO' }]
   @EndUserText.label: 'Cost Center'
-  @UI.hidden: #(HideNPOFields)
   CostCenterNpo;
 
-  @UI.lineItem: [{ position: 530 }]
-  @UI.identification: [{  position: 530 }]
+  @UI.lineItem: [{ position: 530, qualifier: 'NPO'  }]
+  @UI.identification: [{  position: 530, qualifier: 'NPO'  }]
   @EndUserText.label: 'Assignment'
-  @UI.hidden: #(HideNPOFields)
   AssignmentNpo;
 
-  @UI.lineItem: [{ position: 540 }]
-  @UI.identification: [{  position: 540 }]
+  @UI.lineItem: [{ position: 540, qualifier: 'NPO'  }]
+  @UI.identification: [{  position: 540, qualifier: 'NPO'  }]
   @EndUserText.label: 'Text'
-  @UI.hidden: #(HideNPOFields)
   ItemTextNpo;
 
-  @UI.lineItem: [{ position: 550 }]
-  @UI.identification: [{  position: 550 }]
+  @UI.lineItem: [{ position: 550, qualifier: 'NPO'  }]
+  @UI.identification: [{  position: 550, qualifier: 'NPO'  }]
   @EndUserText.label: 'Debit/Credit'
-  @UI.hidden: #(HideNPOFields)
   DebitCreditNpo;
 
-  @UI.lineItem: [{ position: 560 }]
-  @UI.identification: [{  position: 560 }]
+  @UI.lineItem: [{ position: 560, qualifier: 'NPO'  }]
+  @UI.identification: [{  position: 560, qualifier: 'NPO'  }]
   @EndUserText.label: 'Net Amount'
-  @UI.hidden: #(HideNPOFields)
   AmountNpo;
 
-  @UI.lineItem: [{ position: 570 }]
-  @UI.identification: [{  position: 570 }]
+  @UI.lineItem: [{ position: 570, qualifier: 'NPO'  }]
+  @UI.identification: [{  position: 570, qualifier: 'NPO'  }]
   @EndUserText.label: 'Tax Code'
-  @UI.hidden: #(HideNPOFields)
   TaxCodeNpo;
 
-  @UI.lineItem: [{ position: 580 }]
-  @UI.identification: [{  position: 580 }]
+  @UI.lineItem: [{ position: 580, qualifier: 'NPO'  }]
+  @UI.identification: [{  position: 580, qualifier: 'NPO'  }]
   @EndUserText.label: 'Tax Rate'
-  @UI.hidden: #(HideNPOFields)
   TaxRateNpo;
 
-  @UI.lineItem: [{ position: 590 }]
-  @UI.identification: [{  position: 590 }]
+  @UI.lineItem: [{ position: 590, qualifier: 'NPO'  }]
+  @UI.identification: [{  position: 590, qualifier: 'NPO'  }]
   @EndUserText.label: 'Tax Amount'
-  @UI.hidden: #(HideNPOFields)
   TaxAmountNpo;
   /* Associations */
   //_invHeader;

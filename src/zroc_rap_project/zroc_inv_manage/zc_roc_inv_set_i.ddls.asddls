@@ -56,7 +56,7 @@ define view entity ZC_ROC_INV_SET_I
 
           _invHeader.SettleType as SettleType,
           @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_VE_ROC_ITEM_HIDE'
-  virtual HidePOFields  : abap_boolean,
+  virtual HidePOFields  : abap_boolean,   //抬头的虚拟字段不能传递到行项目
           @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_VE_ROC_ITEM_HIDE'
   virtual HideNPOFields : abap_boolean,
   

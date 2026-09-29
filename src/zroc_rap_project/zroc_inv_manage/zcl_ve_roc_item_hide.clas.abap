@@ -18,6 +18,7 @@ CLASS zcl_ve_roc_item_hide IMPLEMENTATION.
 
   METHOD if_sadl_exit_calc_element_read~calculate.
 
+    "只能在Object页隐藏，Table表里不能隐藏header，能隐藏值
     LOOP AT it_original_data ASSIGNING FIELD-SYMBOL(<fs_original_data>).
       ASSIGN COMPONENT 'SETTLETYPE' OF STRUCTURE <fs_original_data> TO FIELD-SYMBOL(<fs_settle_type>).
       IF <fs_settle_type> IS ASSIGNED.

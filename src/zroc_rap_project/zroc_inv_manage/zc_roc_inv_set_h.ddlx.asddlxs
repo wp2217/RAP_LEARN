@@ -52,12 +52,34 @@ annotate entity ZC_ROC_INV_SET_H with
               position: 10,
               label: 'Invoice Selection & Basic Data'  },   //Tab页签
 
-              { id: 'SettlementItem',
-              purpose: #STANDARD,
-              type: #LINEITEM_REFERENCE,   //子节点按行项目显示， 结合子节点metadata中@UI.lineItem: [{  position: 80}]显示字段（定义在下个页面，显示在下一个页面）
-              position: 20,
-              label: 'Items',          //Tab页签
-              targetElement: '_invItem'  },
+  //              { id: 'SettlementItem',
+  //              purpose: #STANDARD,
+  //              type: #LINEITEM_REFERENCE,   //子节点按行项目显示， 结合子节点metadata中@UI.lineItem: [{  position: 80}]显示字段（定义在下个页面，显示在下一个页面）
+  //              position: 20,
+  //              label: 'Items',          //Tab页签
+  //              targetElement: '_invItem'  },
+
+              {
+                  id: 'POItems',
+                  purpose: #STANDARD,
+                  type: #LINEITEM_REFERENCE,
+                  label: 'PO Invoice Items',
+                  position: 20,
+                  targetQualifier: 'PO',    //PO类型下，行项目只显示PO相关字段
+                  targetElement: '_invItem',
+                  hidden: #(HidePOFields)
+              },
+      
+              {
+                  id: 'NPOItems',
+                  purpose: #STANDARD,
+                  type: #LINEITEM_REFERENCE,
+                  label: 'Non-PO Invoice Items',
+                  position: 30,
+                  targetQualifier: 'NPO',   //NPO类型下，行项目只显示NPO相关字段
+                  targetElement: '_invItem',
+                  hidden: #(HideNPOFields)
+              },
 
   //*****************Tab End*********************************************
 
@@ -84,7 +106,7 @@ annotate entity ZC_ROC_INV_SET_H with
 
   //**********************Header Field Begin******************************************
   @UI.lineItem: [ { position: 10 } ]
-  @UI.identification: [ { position: 10 }, { type: #FOR_ACTION, position: 10,  dataAction: 'getGRItem', label: 'Get GR Items' }, 
+  @UI.identification: [ { position: 10 }, { type: #FOR_ACTION, position: 10,  dataAction: 'getGRItem', label: 'Get GR Items' },
                                           { type: #FOR_ACTION, position: 20,  dataAction: 'doSubmit',  label: 'Submit' } ]
   @UI.selectionField: [ { position: 10 } ]
   @Search.defaultSearchElement: true
