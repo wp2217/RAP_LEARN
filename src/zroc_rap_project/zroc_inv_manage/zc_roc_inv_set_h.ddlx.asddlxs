@@ -117,6 +117,17 @@ annotate entity ZC_ROC_INV_SET_H with
   @UI.selectionField: [ { position: 60 } ]
   @UI.fieldGroup:     [ { qualifier: 'tqHeaderInfo', position: 10}]
   Bukrs;
+  
+    @UI.lineItem: [ { position: 20 } ]
+  @UI.selectionField: [ { position: 40 } ]
+  @UI.fieldGroup:     [ { qualifier: 'tqHeaderGrossAmount',position: 10} ]
+  @Consumption.valueHelpDefinition: [{
+  entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
+  additionalBinding: [
+    { localConstant: 'ZDROC_SETTLE_STATUS', element: 'DomainName', usage: #FILTER }],
+  distinctValues: true
+  }]
+  SettleStatus;
 
   @UI.lineItem: [ { position: 30 } ]
   @UI.selectionField: [ { position: 50 } ]
@@ -129,7 +140,7 @@ annotate entity ZC_ROC_INV_SET_H with
   }]
   BusinessType;
 
-  @UI.lineItem: [ { position: 16 } ]
+  @UI.lineItem: [ { position: 15 } ]
   @UI.selectionField: [ { position: 30 } ]
   @UI.fieldGroup:     [ { qualifier: 'tqHeaderInfo', position: 30}]
   @Consumption.valueHelpDefinition: [{
@@ -168,18 +179,6 @@ annotate entity ZC_ROC_INV_SET_H with
   DiffTaxAmount;
 
 
-  @UI.lineItem: [ { position: 20 } ]
-  @UI.selectionField: [ { position: 40 } ]
-  @UI.fieldGroup:     [ { qualifier: 'tqHeaderGrossAmount',position: 10} ]
-  @Consumption.valueHelpDefinition: [{
-  entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
-  additionalBinding: [
-    { localConstant: 'ZDROC_SETTLE_STATUS', element: 'DomainName', usage: #FILTER }],
-  distinctValues: true
-  }]
-  SettleStatus;
-
-
   @UI.lineItem: [ { position: 40 } ]
   @UI.selectionField: [ { position: 100 } ]
   @EndUserText.label: 'Gross Amount'
@@ -188,7 +187,7 @@ annotate entity ZC_ROC_INV_SET_H with
   //**********************Header Field End******************************************
 
   //**********************Invoice Selection Field Begin******************************************
-  @UI.lineItem: [ { position: 15 } ]
+  @UI.lineItem: [ { position: 11 } ]
   @UI.selectionField: [ { position: 20 } ]
   @EndUserText.label: 'Invoice Number'
   @UI.fieldGroup:     [ { qualifier: 'tqInvSelection', position: 10, groupLabel:'Invoice Selection'}]
@@ -225,7 +224,7 @@ annotate entity ZC_ROC_INV_SET_H with
 
   //**********************Text Field End******************************************
 
-  @UI.lineItem: [ { position: 17 } ]
+  @UI.lineItem: [ { position: 25 } ]
   @UI.fieldGroup:     [ { qualifier: 'tqSettleText', position: 20}]
   //  @Consumption.valueHelpDefinition: [{
   //   entity: { name: 'ZI_ROC_DOMAIN_VH', element: 'Value' },
