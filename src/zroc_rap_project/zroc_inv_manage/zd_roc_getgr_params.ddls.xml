@@ -5,7 +5,7 @@
    <DDLS>
     <DDLNAME>ZD_ROC_GETGR_PARAMS</DDLNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
-    <DDTEXT>Abstract Entity for Get GR Item Params</DDTEXT>
+    <DDTEXT>Not used Abstract Entity for Get GR Item Params</DDTEXT>
     <SOURCE_TYPE>A</SOURCE_TYPE>
    </DDLS>
   </asx:values>

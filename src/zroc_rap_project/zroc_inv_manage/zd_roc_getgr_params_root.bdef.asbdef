@@ -4,4 +4,10 @@ with hierarchy;
 
 define behavior for ZD_ROC_GETGR_PARAMS_ROOT //alias <alias_name>
 {
+  association _items;
+}
+
+define behavior for ZD_ROC_GETGR_PARAMS
+{
+
 }
