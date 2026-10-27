@@ -50,7 +50,7 @@ early numbering
   side effects { field InvoiceNo affects field ( Lifnr, SellerName, Waers, Bktxt, grossamount, netamount, taxamount, invoicedate ); }
 
   //GET GR ITEM自定义按钮
-  action ( features : instance ) getGRItem deep parameter ZD_ROC_GETGR_PARAMS_ROOT result [1] $self;
+  action ( features : instance ) getGRItem result [1] $self;
 
   //Submit 按钮
   action ( features : instance, precheck ) doSubmit result [1] $self;
